@@ -25,8 +25,10 @@ public class User {
     @Column(name = "user_surname")
     private String surname;
 
+
     @Column(name = "user_ame")
     private String username;
+
 
     @Column(name = "email")
     private String email;
