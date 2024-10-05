@@ -17,4 +17,6 @@ public interface ProductsServices {
 
     void deleteProduct(Long id);
 
+    List<Product> getByName(String name);
+
 }
