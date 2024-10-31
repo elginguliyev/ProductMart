@@ -1,6 +1,5 @@
 package com.example.services;
 
-import com.example.dto.OrderItemDto;
 import com.example.entites.OrderItem;
 
 import java.util.List;
