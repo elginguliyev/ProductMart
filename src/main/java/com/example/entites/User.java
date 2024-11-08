@@ -19,14 +19,14 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "user_name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "user_surname")
+    @Column(name = "surname")
     private String surname;
 
 
-    @Column(name = "user_ame")
+    @Column(name = "username")
     private String username;
 
 

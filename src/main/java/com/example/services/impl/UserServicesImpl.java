@@ -16,8 +16,8 @@ public class UserServicesImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -31,7 +31,7 @@ public class UserServicesImpl implements UserService {
         user.setSurname(userDto.getSurname());
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setPassword(userDto.getPassword());
         return userRepository.save(user);
     }
 
