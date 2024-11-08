@@ -1,18 +1,16 @@
 package com.example.entites;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Entity
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order_items")
-public class OrderItem {
+@ToString
+@Entity
+@Table(name ="cart_item")
+public class CartItem {
 
 
     @Id
@@ -20,7 +18,11 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne
-    private Product product;
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
+    @Column(name = "product_id")
+    private Long productId;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -28,4 +30,8 @@ public class OrderItem {
     @Column(name = "price")
     private Double price;
 
+
+
 }
+
+
