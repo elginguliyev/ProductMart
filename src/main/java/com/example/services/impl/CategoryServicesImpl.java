@@ -4,10 +4,12 @@ import com.example.dto.CategoryDto;
 import com.example.entites.Category;
 import com.example.repository.CategoryRepository;
 import com.example.services.CategoryServices;
+import com.example.utill.CategoryToCategoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServicesImpl implements CategoryServices {
@@ -25,21 +27,29 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     @Override
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id)
+    public CategoryDto getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category  not found"));
+
+        CategoryDto categoryDto = CategoryToCategoryDto.concertToCategory(category);
+        return categoryDto;
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getAllCategories() {
+        List<Category> categoryList = categoryRepository.findAll();
+        return categoryList.stream()
+                .map(category -> CategoryToCategoryDto.concertToCategory(category))
+                .collect(Collectors.toList());
+
     }
 
     @Override
-    public Category updateCategory(Long id, CategoryDto categoryDto) {
-        Category category = getCategoryById(id);
+    public void updateCategory(Long id, CategoryDto categoryDto) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category  not found"));
         category.setName(categoryDto.getName());
-        return categoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
     @Override
