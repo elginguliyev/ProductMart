@@ -15,6 +15,7 @@ import java.io.IOException;
 
 @Component
 public class TokenFilter extends OncePerRequestFilter {
+
     private final MyTokenManager jwtTokenProvider;
     private final MyUserDetailsServices userDetailsService;
 
@@ -29,12 +30,22 @@ public class TokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(request);
-        if (token != null && jwtTokenProvider.validateToken(token) && jwtTokenProvider.isExpairedToken(token)) {
+
+        // Token varsa və keçərlidirsə yoxla
+        if (token != null && jwtTokenProvider.validateToken(token) && !jwtTokenProvider.isExpairedToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // Filter etməməli olan endpoint-ləri istisna et
+        String path = request.getServletPath();
+        return path.equals("/login") || path.equals("/register") || path.startsWith("/auth/");
     }
 }

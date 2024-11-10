@@ -9,26 +9,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/api/")
 public class ProductController {
 
     @Autowired
     ProductsServices productsServices;
 
-    @GetMapping(path = "/all/product")
+    @GetMapping(path = "products")
     public ResponseEntity<List<Product>> getAllproducts() {
         List<Product> productList = productsServices.getAllProducts();
         return ResponseEntity.ok(productList);
     }
 
 
-    @GetMapping(path = "/{id}/product")
+    @GetMapping(path = "{id}/product")
     public ResponseEntity<Product> getByIdProduct(@PathVariable Long id) {
         Product product = productsServices.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productsServices.deleteProduct(id);
         return ResponseEntity.ok("User with ID " + id + " deleted successfully");

@@ -1,6 +1,7 @@
 package com.example.services.impl;
 
 import com.example.dto.UserDto;
+import com.example.entites.Role;
 import com.example.entites.User;
 import com.example.repository.UserRepository;
 import com.example.services.UserService;
@@ -16,8 +17,8 @@ public class UserServicesImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -27,11 +28,14 @@ public class UserServicesImpl implements UserService {
             throw new RuntimeException("User with email " + userDto.getEmail() + " already exists");
         }
         User user = new User();
+
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        Role role = Role.valueOf(userDto.getRole().toUpperCase());
+        user.setRole(role);
         return userRepository.save(user);
     }
 

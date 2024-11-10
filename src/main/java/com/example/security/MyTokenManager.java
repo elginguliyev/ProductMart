@@ -43,7 +43,7 @@ public class MyTokenManager {
 
     public boolean isExpairedToken(String token){
          return   Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token)
-                .getBody().getExpiration().after(new Date(System.currentTimeMillis()));
+                .getBody().getExpiration().before(new Date(System.currentTimeMillis()));
     }
 
 }

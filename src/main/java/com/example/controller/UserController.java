@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/user")
+@RequestMapping(path = "/api/v1/")
 public class UserController {
 
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/all/users")
+    @GetMapping("users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}/user")
+    @GetMapping("{id}/user")
     public ResponseEntity<User> getByIdUser(@PathVariable Long id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);

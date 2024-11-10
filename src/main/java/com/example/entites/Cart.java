@@ -23,6 +23,10 @@ public class Cart {
     @Column(name = "total_amount")
     private Double totalAmount;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id") // foreign key column
+    private User user;
+
 
 }
 
