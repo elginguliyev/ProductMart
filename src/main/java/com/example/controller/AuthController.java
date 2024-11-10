@@ -30,10 +30,10 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<List<User>> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<List<UserDto>> register(@RequestBody UserDto userDto) {
         userService.createUser(userDto);
-        List<User> userList = userService.getAllUsers();
-        return ResponseEntity.ok(userList);
+        List<UserDto> userDtoList = userService.getAllUsers();
+        return ResponseEntity.ok(userDtoList);
     }
 
     @PostMapping("/login")

@@ -18,31 +18,23 @@ public class UserController {
     UserService userService;
 
     @GetMapping("users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> usersDtoList = userService.getAllUsers();
+        return ResponseEntity.ok(usersDtoList);
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("user{id}")
     public ResponseEntity<UserDto> getByIdUser(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        UserDto userDto = new UserDto();
-        userDto.setName(user.getName());
-        userDto.setSurname(user.getSurname());
-        userDto.setEmail(user.getEmail());
-        userDto.setUsername(user.getUsername());
+        UserDto userDto = userService.getUserById(id);
         return ResponseEntity.ok(userDto);
     }
 
-    @PutMapping(path ="user/{id}" )
+    @PutMapping(path = "user/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
                                               @RequestBody UserDto userDto) {
-        UserDto userDto1 = getByIdUser(id).getBody();
-        userDto1.setName(userDto.getName());
-        userDto1.setSurname(userDto.getSurname());
-        userDto1.setEmail(userDto.getEmail());
-        userDto1.setUsername(userDto.getUsername());
-        return null;
+        userService.updateUser(id, userDto);
+        UserDto userDto2 = getByIdUser(id).getBody();
+        return ResponseEntity.ok(userDto2);
     }
 
     @DeleteMapping("user/{id}")

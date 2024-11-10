@@ -5,11 +5,14 @@ import com.example.entites.Role;
 import com.example.entites.User;
 import com.example.repository.UserRepository;
 import com.example.services.UserService;
+import com.example.utill.UserToUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServicesImpl implements UserService {
@@ -40,25 +43,32 @@ public class UserServicesImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    public UserDto getUserById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserDto userDto = UserToUserDto.convertUserDto(user);
+        return userDto;
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        List<User> usersList = userRepository.findAll();
+        List<UserDto> userDtoList = usersList.stream()
+                .map(user -> UserToUserDto.convertUserDto(user))
+                .collect(Collectors.toList());
+
+        return userDtoList;
     }
 
     @Override
-    public User updateUser(Long id, UserDto userDto) {
-        User user = getUserById(id);
+    public void updateUser(Long id, UserDto userDto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not Found"));
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setPassword(user.getPassword());
-        return userRepository.save(user);
+        userRepository.save(user);
 
     }
 
