@@ -9,14 +9,14 @@ public interface ProductsServices {
 
     Product createProduct(ProductDto productDto);
 
-    Product getProductById(Long id);
+    ProductDto getProductById(Long id);
 
-    List<Product> getAllProducts();
+    List<ProductDto> getAllProducts();
 
-    Product updateProduct(Long id, ProductDto productDto);
+    void updateProduct(Long id, ProductDto productDto);
 
     void deleteProduct(Long id);
 
-    List<Product> getByName(String name);
+    List<ProductDto> getByName(String name);
 
 }

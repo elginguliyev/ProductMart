@@ -17,7 +17,7 @@ public class ProductDto {
 
     private double price;
 
-    private int stockQuantity;
+    private int Quantity;
 
     private Long catagoryId;
 

@@ -6,10 +6,12 @@ import com.example.entites.Product;
 import com.example.repository.CategoryRepository;
 import com.example.repository.ProductRepository;
 import com.example.services.ProductsServices;
+import com.example.utill.ProductToProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServicesImpl implements ProductsServices {
@@ -31,26 +33,32 @@ public class ProductServicesImpl implements ProductsServices {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(product.getPrice());
-        product.setQuantity(productDto.getStockQuantity());
+        product.setQuantity(productDto.getQuantity());
         product.setCatagory(category);
 
         return productRepository.save(product);
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
+    public ProductDto getProductById(Long id) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        ProductDto productDto = ProductToProductDto.convertToProduct(product);
+        return productDto;
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts() {
+        List<Product> productList = productRepository.findAll();
+        return productList.stream()
+                .map(product -> ProductToProductDto.convertToProduct(product))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Product updateProduct(Long id, ProductDto productDto) {
-        Product product = getProductById(id);
+    public void updateProduct(Long id, ProductDto productDto) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 
         Category category = categoryRepository.findById(productDto.getCatagoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -58,9 +66,9 @@ public class ProductServicesImpl implements ProductsServices {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
-        product.setQuantity(productDto.getStockQuantity());
+        product.setQuantity(productDto.getQuantity());
         product.setCatagory(category);
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
     @Override
@@ -69,7 +77,8 @@ public class ProductServicesImpl implements ProductsServices {
     }
 
     @Override
-    public List<Product> getByName(String name) {
-        return  productRepository.findByName(name);
+    public List<ProductDto> getByName(String name) {
+        List<Product> productList = productRepository.findByName(name);
+        return null;
     }
 }
