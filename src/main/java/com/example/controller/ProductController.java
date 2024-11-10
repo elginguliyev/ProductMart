@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/")
+@RequestMapping(path = "/api/v1")
 public class ProductController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}/product")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productsServices.deleteProduct(id);
         return ResponseEntity.ok("User with ID " + id + " deleted successfully");
