@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 public class ProductServicesImpl implements ProductsServices {
 
 
-
-    private   final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
 
     private final CategoryRepository categoryRepository;
@@ -37,8 +36,8 @@ public class ProductServicesImpl implements ProductsServices {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
-        product.setPrice(product.getPrice());
-        product.setQuantity(productDto.getQuantity());
+        product.setPrice(productDto.getPrice() != null ? productDto.getPrice() : 0.0);
+        product.setQuantity(productDto.getQuantity() != null ? productDto.getQuantity() : 0);
         product.setCatagory(category);
 
         return productRepository.save(product);
@@ -65,14 +64,26 @@ public class ProductServicesImpl implements ProductsServices {
     public void updateProduct(Long id, ProductDto productDto) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 
-        Category category = categoryRepository.findById(productDto.getCatagoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
-        product.setQuantity(productDto.getQuantity());
-        product.setCatagory(category);
+        if (productDto.getName() != null) {
+            product.setName(productDto.getName());
+        }
+        if (productDto.getDescription() != null) {
+            product.setDescription(productDto.getDescription());
+        }
+        if (productDto.getPrice() != null) {
+            product.setPrice(productDto.getPrice());
+        } else if (product.getPrice() == null) {
+            product.setPrice(0.0); // Default qiymət
+        }
+        if (productDto.getQuantity() !=null) {
+            product.setQuantity(productDto.getQuantity());
+        }
+        if (productDto.getCatagoryId() != null) {
+            Category category = categoryRepository.findById(productDto.getCatagoryId())
+                    .orElseThrow(() -> new RuntimeException("Category with ID " + productDto.getCatagoryId() + " not found"));
+            product.setCatagory(category);
+        }
         productRepository.save(product);
     }
 

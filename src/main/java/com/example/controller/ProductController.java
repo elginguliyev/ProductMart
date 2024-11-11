@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.ProductDto;
+import com.example.entites.Product;
 import com.example.services.ProductsServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ProductController {
 
 
-   private final ProductsServices productsServices;
+    private final ProductsServices productsServices;
 
     public ProductController(ProductsServices productsServices) {
         this.productsServices = productsServices;
@@ -45,6 +46,13 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productsServices.deleteProduct(id);
         return ResponseEntity.ok("User with ID " + id + " deleted successfully");
+    }
+
+    @PostMapping(path = "add/product")
+    public ResponseEntity<String> addProduct(@RequestBody ProductDto productDto) {
+        Product product = productsServices.createProduct(productDto);
+
+        return ResponseEntity.ok(product.getName() + " created successfully");
     }
 
 }

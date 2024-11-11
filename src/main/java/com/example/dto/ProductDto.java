@@ -3,6 +3,8 @@ package com.example.dto;
 import com.example.entites.Category;
 import lombok.*;
 
+import java.io.DataInput;
+
 @Getter
 @Setter
 @ToString
@@ -15,9 +17,9 @@ public class ProductDto {
 
     private String description;
 
-    private double price;
+    private Double price;
 
-    private int Quantity;
+    private Integer quantity;
 
     private Long catagoryId;
 
