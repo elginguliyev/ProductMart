@@ -1,7 +1,6 @@
 package com.example.controller;
 
 import com.example.dto.ProductDto;
-import com.example.entites.Product;
 import com.example.services.ProductsServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,12 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/")
 public class ProductController {
 
-    @Autowired
-    ProductsServices productsServices;
+
+   private final ProductsServices productsServices;
+
+    public ProductController(ProductsServices productsServices) {
+        this.productsServices = productsServices;
+    }
 
     @GetMapping(path = "products")
     public ResponseEntity<List<ProductDto>> getAllproducts() {

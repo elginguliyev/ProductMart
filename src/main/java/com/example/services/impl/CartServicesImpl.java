@@ -15,12 +15,17 @@ import java.util.Optional;
 @Service
 public class CartServicesImpl implements CartServices {
 
-    @Autowired
+
     private CartRepository cartRepository;
 
-    @Autowired
+
     private CartItemRepository cartItemRepository;
 
+    public CartServicesImpl(CartRepository cartRepository,
+                            CartItemRepository cartItemRepository) {
+        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
+    }
 
     @Override
     public Cart createCart(CartItemDto cartItemDto) {

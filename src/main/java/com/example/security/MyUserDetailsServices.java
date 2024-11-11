@@ -3,7 +3,6 @@ package com.example.security;
 
 import com.example.entites.User;
 import com.example.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,8 +13,12 @@ import java.util.ArrayList;
 @Service
 public class MyUserDetailsServices implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userService;
+
+    private final UserRepository userService;
+
+    public MyUserDetailsServices(UserRepository userService) {
+        this.userService = userService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

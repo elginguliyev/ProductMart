@@ -13,8 +13,12 @@ import java.util.List;
 public class CartItemServicesImpl implements CartItemServices {
 
 
-    @Autowired
-    private CartItemRepository cartItemRepository;
+
+    private final CartItemRepository cartItemRepository;
+
+    public CartItemServicesImpl(CartItemRepository cartItemRepository) {
+        this.cartItemRepository = cartItemRepository;
+    }
 
     @Override
     public CartItem createCartItem(CartItemDto cartItemDto) {

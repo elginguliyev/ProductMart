@@ -17,12 +17,17 @@ import java.util.stream.Collectors;
 public class ProductServicesImpl implements ProductsServices {
 
 
-    @Autowired
-    private ProductRepository productRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private   final ProductRepository productRepository;
 
+
+    private final CategoryRepository categoryRepository;
+
+    public ProductServicesImpl(ProductRepository productRepository,
+                               CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Product createProduct(ProductDto productDto) {

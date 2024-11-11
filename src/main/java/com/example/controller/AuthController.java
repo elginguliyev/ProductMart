@@ -20,14 +20,20 @@ import java.util.List;
 @RequestMapping(path = "/auth")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private MyTokenManager jwtTokenProvider;
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
+    private final UserService userService;
 
+    private final MyTokenManager jwtTokenProvider;
+
+    private final AuthenticationManager authenticationManager;
+
+    public AuthController(UserService userService,
+                          MyTokenManager jwtTokenProvider,
+                          AuthenticationManager authenticationManager) {
+        this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<List<UserDto>> register(@RequestBody UserDto userDto) {

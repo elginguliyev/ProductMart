@@ -24,10 +24,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private MyTokenManager jwtTokenProvider;
-    @Autowired
-    private MyUserDetailsServices userDetailsService;
+
+    private final MyTokenManager jwtTokenProvider;
+
+    private final MyUserDetailsServices userDetailsService;
+
+    public SecurityConfig(MyTokenManager jwtTokenProvider,
+                          MyUserDetailsServices userDetailsService) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
