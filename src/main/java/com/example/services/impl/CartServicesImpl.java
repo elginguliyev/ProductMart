@@ -65,13 +65,5 @@ public class CartServicesImpl implements CartServices {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void updateCart(Long id, CartItemDto cartItemDto) {
 
-    }
-
-    @Override
-    public void deleteCart(Long id) {
-        cartRepository.deleteById(id);
-    }
 }
