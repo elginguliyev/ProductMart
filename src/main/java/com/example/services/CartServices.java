@@ -1,5 +1,6 @@
 package com.example.services;
 
+import com.example.dto.CartDto;
 import com.example.dto.CartItemDto;
 import com.example.entites.Cart;
 import com.example.entites.CartItem;
@@ -10,11 +11,11 @@ public interface CartServices {
 
     Cart createCart(CartItemDto cartItemDto);
 
-    Cart getCartById(Long id);
+    CartDto getCartById(Long id);
 
-    List<Cart> getAllCartss();
+    List<CartDto> getAllCartss();
 
-    Cart updateCart(Long id, CartItemDto cartItemDto);
+    void updateCart(Long id, CartItemDto cartItemDto);
 
     void deleteCart(Long id);
 
