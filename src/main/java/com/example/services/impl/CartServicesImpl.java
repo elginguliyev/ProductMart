@@ -6,13 +6,11 @@ import com.example.entites.Cart;
 import com.example.entites.CartItem;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
-import com.example.services.CartServices;
+import com.example.services.inter.CartServices;
 import com.example.utill.CartToCartDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

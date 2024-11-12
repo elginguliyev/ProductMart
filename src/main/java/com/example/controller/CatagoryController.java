@@ -2,10 +2,8 @@ package com.example.controller;
 
 import com.example.dto.CategoryDto;
 import com.example.entites.Category;
-import com.example.services.CategoryServices;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import com.example.services.inter.CategoryServices;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

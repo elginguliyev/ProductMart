@@ -8,7 +8,7 @@ import com.example.entites.User;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
 import com.example.repository.UserRepository;
-import com.example.services.CartItemServices;
+import com.example.services.inter.CartItemServices;
 import com.example.utill.CartItemToCartItemDto;
 import com.example.utill.CartToCartDto;
 import lombok.RequiredArgsConstructor;

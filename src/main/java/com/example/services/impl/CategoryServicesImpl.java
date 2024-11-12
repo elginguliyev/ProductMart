@@ -3,9 +3,8 @@ package com.example.services.impl;
 import com.example.dto.CategoryDto;
 import com.example.entites.Category;
 import com.example.repository.CategoryRepository;
-import com.example.services.CategoryServices;
+import com.example.services.inter.CategoryServices;
 import com.example.utill.CategoryToCategoryDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

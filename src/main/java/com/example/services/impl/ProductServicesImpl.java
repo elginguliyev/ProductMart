@@ -5,9 +5,8 @@ import com.example.entites.Category;
 import com.example.entites.Product;
 import com.example.repository.CategoryRepository;
 import com.example.repository.ProductRepository;
-import com.example.services.ProductsServices;
+import com.example.services.inter.ProductsServices;
 import com.example.utill.ProductToProductDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

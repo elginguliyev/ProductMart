@@ -1,4 +1,4 @@
-package com.example.services;
+package com.example.services.inter;
 
 import com.example.dto.ProductDto;
 import com.example.entites.Product;

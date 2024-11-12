@@ -2,8 +2,7 @@ package com.example.controller;
 
 import com.example.dto.ProductDto;
 import com.example.entites.Product;
-import com.example.services.ProductsServices;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.services.inter.ProductsServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
