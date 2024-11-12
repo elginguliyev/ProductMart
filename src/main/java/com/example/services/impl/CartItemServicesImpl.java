@@ -1,15 +1,21 @@
 package com.example.services.impl;
 
+import com.example.dto.CartDto;
 import com.example.dto.CartItemDto;
 import com.example.entites.Cart;
 import com.example.entites.CartItem;
+import com.example.entites.User;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
+import com.example.repository.UserRepository;
 import com.example.services.CartItemServices;
+import com.example.utill.CartItemToCartItemDto;
+import com.example.utill.CartToCartDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,47 +26,123 @@ public class CartItemServicesImpl implements CartItemServices {
 
     private final CartRepository cartRepository;
 
+    private final UserRepository userRepository;
 
     @Override
-    public CartItem createCartItem(CartItemDto cartItemDto) {
-
-        Cart cart = cartRepository.findById(cartItemDto.getCartId())
-                .orElseThrow(() -> new RuntimeException("Cart not fount"));
-
-        CartItem cartItem = new CartItem();
-        cartItem.setProductId(cartItemDto.getProductId());
-        cartItem.setPrice(cartItemDto.getPrice());
-        cartItem.setQuantity(cartItemDto.getQuantity());
-        cartItem.setCart(cart);
-
-        double newAmount = cartItemDto.getPrice() * cartItemDto.getQuantity();
-
-        cart.setTotalAmount(cart.getTotalAmount() + newAmount);
+    public CartDto createCartItem(CartItemDto cartItemDto, Long userid) {
 
 
-        cart.getCartItems().add(cartItem);
-        cartRepository.save(cart);
-        return cartItemRepository.save(cartItem);
+        User user = userRepository.findById(userid).orElseThrow(() -> new RuntimeException("User not found"));
+        Cart cart = cartRepository.findByUser(user);
+
+        if (cart == null) {
+            cart = new Cart();
+            cart.setTotalAmount(0.0);
+            cart.setUser(user);
+            cartRepository.save(cart);
+        }
+
+        CartItem existingCartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProductId().equals(cartItemDto.getProductId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existingCartItem != null) {
+            int newQuantity = existingCartItem.getQuantity() + cartItemDto.getQuantity();
+            existingCartItem.setQuantity(newQuantity);
+
+            double newAmount = existingCartItem.getPrice() * cartItemDto.getQuantity();
+            cart.setTotalAmount(cart.getTotalAmount() + newAmount);
+        } else {
+            CartItem cartItem = new CartItem();
+            cartItem.setProductId(cartItemDto.getProductId());
+            cartItem.setPrice(cartItemDto.getPrice());
+            cartItem.setQuantity(cartItemDto.getQuantity());
+            cartItem.setCart(cart);
+
+            double newAmount = cartItemDto.getPrice() * cartItemDto.getQuantity();
+
+            cart.setTotalAmount(cart.getTotalAmount() + newAmount);
+            cart.getCartItems().add(cartItem);
+        }
+        Cart cart1 = cartRepository.save(cart);
+        return CartToCartDto.convertToCartDto(cart1);
+
     }
 
     @Override
-    public CartItem getCartItemById(Long id) {
-        return cartItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("cartItem can not find"));
+    public CartItemDto getCartItemById(Long userId, Long cartItemId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Cart cart = cartRepository.findByUser(user);
+
+        CartItem item = cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        return CartItemToCartItemDto.convertToCartItemDto(item);
     }
 
     @Override
-    public List<CartItem> getAllCartItems() {
-        return cartItemRepository.findAll();
+    public List<CartItemDto> getAllCartItems(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Cart cart = cartRepository.findByUser(user);
+
+        List<CartItem> cartItemList = cart.getCartItems();
+        return cartItemList.stream()
+                .map(cartItem -> CartItemToCartItemDto.convertToCartItemDto(cartItem))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public CartItem updateCartItem(Long id, CartItemDto orderItemDto) {
-        return null;
+    public CartDto updateCartItem(Long userId, Long cartItemId, CartItemDto cartItemDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Cart cart = cartRepository.findByUser(user);
+
+        CartItem existingCartItem = cart.getCartItems().stream()
+                .filter(item -> item.getId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        double newAmount = existingCartItem.getPrice() * cartItemDto.getQuantity();
+        double currentAmount = existingCartItem.getPrice() * existingCartItem.getQuantity();
+
+        if (existingCartItem != null) {
+            existingCartItem.setQuantity(cartItemDto.getQuantity());
+        }
+
+        if (cartItemDto.getQuantity() > existingCartItem.getQuantity()) {
+            cart.setTotalAmount(cart.getTotalAmount() + newAmount);
+        } else {
+            cart.setTotalAmount(cart.getTotalAmount() + newAmount - currentAmount);
+        }
+
+
+        Cart updateCart = cartRepository.save(cart);
+        return CartToCartDto.convertToCartDto(updateCart);
     }
 
     @Override
-    public void deleteCartItem(Long id) {
-        cartItemRepository.deleteById(id);
+    public CartDto deleteCartItem(Long useriId, Long cartItemId) {
+        User user = userRepository.findById(useriId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findByUser(user);
+        if (cart == null) {
+            throw new RuntimeException("cart not found");
+        }
+
+
+        CartItem exsistingcartItem = cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getId().equals(cartItemId))
+                .findFirst()
+                .orElse(null);
+        double newAmount = exsistingcartItem.getPrice() * exsistingcartItem.getQuantity();
+        cart.setTotalAmount(cart.getTotalAmount() - newAmount);
+
+        cart.getCartItems().remove(exsistingcartItem);
+        cartItemRepository.deleteById(cartItemId);
+
+        Cart updateCart = cartRepository.save(cart);
+        return CartToCartDto.convertToCartDto(updateCart);
     }
 }

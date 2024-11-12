@@ -18,7 +18,8 @@ public class CartToCartDto {
         List<CartItemDto> cartItemList = cart.getCartItems().stream()
                 .map(cartItem -> convertToCartItemDto(cartItem))  // CartItem-ı CartItemDto-ya çeviririk
                 .collect(Collectors.toList());
-
+        cartDto.setId(cart.getId());
+        cartDto.setUserId(cart.getUser().getId());
         cartDto.setTotalAmount(cart.getTotalAmount());
         cartDto.setCartItems(cartItemList);
 
