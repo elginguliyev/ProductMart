@@ -2,6 +2,8 @@ package com.example.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @ToString
@@ -10,5 +12,6 @@ import lombok.*;
 public class CategoryDto {
 
     private String name;
+    List<ProductDto> productDtoList;
 
 }
