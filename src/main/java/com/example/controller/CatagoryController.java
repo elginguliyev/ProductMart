@@ -43,7 +43,7 @@ public class CatagoryController {
         return ResponseEntity.ok(categoryDto1);
     }
 
-    @PostMapping(path = "/add/category")
+    @PostMapping(path = "add/category")
     public ResponseEntity<String> addCategory(@RequestBody CategoryDto categoryDto) {
         Category category = categoryServices.createCategory(categoryDto);
         return ResponseEntity.ok(category.getName() + " created successfully");

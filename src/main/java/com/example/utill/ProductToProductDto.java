@@ -11,7 +11,7 @@ public class ProductToProductDto {
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
         productDto.setQuantity(product.getQuantity());
-        productDto.setCatagoryId(product.getCatagory().getId());
+        productDto.setCategoryId(product.getCatagory().getId());
         return productDto;
     }
 }

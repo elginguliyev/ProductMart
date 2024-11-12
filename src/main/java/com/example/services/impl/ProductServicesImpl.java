@@ -29,7 +29,7 @@ public class ProductServicesImpl implements ProductsServices {
 
     @Override
     public Product createProduct(ProductDto productDto) {
-        Category category = categoryRepository.findById(productDto.getCatagoryId())
+        Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Product product = new Product();
@@ -73,14 +73,14 @@ public class ProductServicesImpl implements ProductsServices {
         if (productDto.getPrice() != null) {
             product.setPrice(productDto.getPrice());
         } else if (product.getPrice() == null) {
-            product.setPrice(0.0); // Default qiymət
+            product.setPrice(0.0);
         }
-        if (productDto.getQuantity() !=null) {
+        if (productDto.getQuantity() != null) {
             product.setQuantity(productDto.getQuantity());
         }
-        if (productDto.getCatagoryId() != null) {
-            Category category = categoryRepository.findById(productDto.getCatagoryId())
-                    .orElseThrow(() -> new RuntimeException("Category with ID " + productDto.getCatagoryId() + " not found"));
+        if (productDto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productDto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category with ID " + productDto.getCategoryId() + " not found"));
             product.setCatagory(category);
         }
         productRepository.save(product);
@@ -93,7 +93,10 @@ public class ProductServicesImpl implements ProductsServices {
 
     @Override
     public List<ProductDto> getByName(String name) {
-        List<Product> productList = productRepository.findByName(name);
-        return null;
+        List<Product> productList = productRepository.findByNameContainingIgnoreCase(name);
+        List<ProductDto> productDtoList = productList.stream()
+                .map(product -> ProductToProductDto.convertToProduct(product))
+                .collect(Collectors.toList());
+        return productDtoList;
     }
 }

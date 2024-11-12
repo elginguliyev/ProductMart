@@ -44,14 +44,20 @@ public class ProductController {
     @DeleteMapping("{id}/product")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productsServices.deleteProduct(id);
-        return ResponseEntity.ok("User with ID " + id + " deleted successfully");
+        return ResponseEntity.ok("Məhsul uğurla silindiş");
     }
 
     @PostMapping(path = "add/product")
     public ResponseEntity<String> addProduct(@RequestBody ProductDto productDto) {
         Product product = productsServices.createProduct(productDto);
 
-        return ResponseEntity.ok(product.getName() + " created successfully");
+        return ResponseEntity.ok("Məhsul uğurla əlavə edildiş");
+    }
+
+    @GetMapping(path = "products/search")
+    public ResponseEntity<List<ProductDto>> getProductByName(@RequestParam(name = "param") String name) {
+        List<ProductDto> productDtoList = productsServices.getByName(name);
+        return ResponseEntity.ok(productDtoList);
     }
 
 }
