@@ -1,6 +1,7 @@
 package com.example.controller;
 
-import com.example.dto.UserDto;
+import com.example.request.UserRequest;
+import com.example.response.UserResponse;
 import com.example.services.inter.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +20,23 @@ public class UserController {
     }
 
     @GetMapping("users")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> usersDtoList = userService.getAllUsers();
-        return ResponseEntity.ok(usersDtoList);
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> responseList = userService.getAllUsers();
+        return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("user{id}")
-    public ResponseEntity<UserDto> getByIdUser(@PathVariable Long id) {
-        UserDto userDto = userService.getUserById(id);
-        return ResponseEntity.ok(userDto);
+    public ResponseEntity<UserResponse> getByIdUser(@PathVariable Long id) {
+        UserResponse userResponse = userService.getUserById(id);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PutMapping(path = "user/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
-                                              @RequestBody UserDto userDto) {
-        userService.updateUser(id, userDto);
-        UserDto userDto2 = getByIdUser(id).getBody();
-        return ResponseEntity.ok(userDto2);
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
+                                                  @RequestBody UserRequest userRequest) {
+        userService.updateUser(id, userRequest);
+        UserResponse userResponse = getByIdUser(id).getBody();
+        return ResponseEntity.ok(userResponse);
     }
 
     @DeleteMapping("user/{id}")

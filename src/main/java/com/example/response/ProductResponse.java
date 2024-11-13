@@ -1,17 +1,15 @@
-package com.example.dto;
+package com.example.response;
 
-import com.example.entites.Category;
 import lombok.*;
 
-import java.io.DataInput;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
-
+public class ProductResponse {
 
     private String name;
 
@@ -22,5 +20,7 @@ public class ProductDto {
     private Integer quantity;
 
     private Long categoryId;
+
+    private List<ImageResponse> imageURLs;
 
 }

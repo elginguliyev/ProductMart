@@ -1,14 +1,13 @@
-package com.example.utill;
+package com.example.dto;
 
-import com.example.dto.CartDto;
-import com.example.dto.CartItemDto;
+import com.example.request.CartDto;
+import com.example.request.CartItemDto;
 import com.example.entites.Cart;
-import com.example.entites.CartItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.utill.CartItemToCartItemDto.convertToCartItemDto;
+import static com.example.dto.CartItemToCartItemDto.convertToCartItemDto;
 
 public class CartToCartDto {
 

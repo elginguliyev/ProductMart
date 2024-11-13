@@ -1,7 +1,8 @@
 package com.example.controller;
 
-import com.example.dto.CategoryDto;
+import com.example.request.CategoryRequest;
 import com.example.entites.Category;
+import com.example.response.CategoryResponse;
 import com.example.services.inter.CategoryServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +20,15 @@ public class CatagoryController {
     }
 
     @GetMapping(path = "catgeories")
-    public ResponseEntity<List<CategoryDto>> getAllCategory() {
-        List<CategoryDto> categoryDtos = categoryServices.getAllCategories();
-        return ResponseEntity.ok(categoryDtos);
+    public ResponseEntity<List<CategoryResponse>> getAllCategory() {
+        List<CategoryResponse> categoryResponses = categoryServices.getAllCategories();
+        return ResponseEntity.ok(categoryResponses);
     }
 
     @GetMapping(path = "category/{id}")
-    public ResponseEntity<CategoryDto> getByIdCategory(@PathVariable Long id) {
-        CategoryDto categoryDto = categoryServices.getCategoryById(id);
-        return ResponseEntity.ok(categoryDto);
+    public ResponseEntity<CategoryResponse> getByIdCategory(@PathVariable Long id) {
+        CategoryResponse categoryResponse = categoryServices.getCategoryById(id);
+        return ResponseEntity.ok(categoryResponse);
     }
 
     @DeleteMapping("category/{id}")
@@ -36,16 +37,16 @@ public class CatagoryController {
     }
 
     @PutMapping(path = "category/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id,
-                                                      @RequestBody CategoryDto categoryDto) {
-        categoryServices.updateCategory(id, categoryDto);
-        CategoryDto categoryDto1 = getByIdCategory(id).getBody();
-        return ResponseEntity.ok(categoryDto1);
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id,
+                                                           @RequestBody CategoryRequest categoryRequest) {
+        categoryServices.updateCategory(id, categoryRequest);
+        CategoryResponse categoryResponse = getByIdCategory(id).getBody();
+        return ResponseEntity.ok(categoryResponse);
     }
 
     @PostMapping(path = "add/category")
-    public ResponseEntity<String> addCategory(@RequestBody CategoryDto categoryDto) {
-        Category category = categoryServices.createCategory(categoryDto);
+    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest categoryRequest) {
+        Category category = categoryServices.createCategory(categoryRequest);
         return ResponseEntity.ok(category.getName() + " created successfully");
     }
 }

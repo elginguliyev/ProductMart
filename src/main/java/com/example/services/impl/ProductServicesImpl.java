@@ -1,86 +1,103 @@
 package com.example.services.impl;
 
-import com.example.dto.ProductDto;
+import com.example.request.ProductRequest;
 import com.example.entites.Category;
+import com.example.entites.Image;
 import com.example.entites.Product;
 import com.example.repository.CategoryRepository;
+import com.example.repository.ImageRepository;
 import com.example.repository.ProductRepository;
+import com.example.response.ProductResponse;
+import com.example.services.inter.ImageServices;
 import com.example.services.inter.ProductsServices;
-import com.example.utill.ProductToProductDto;
+import com.example.dto.ProductToProductResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServicesImpl implements ProductsServices {
 
 
     private final ProductRepository productRepository;
-
-
+    private final ImageServices imageServices;
     private final CategoryRepository categoryRepository;
-
-    public ProductServicesImpl(ProductRepository productRepository,
-                               CategoryRepository categoryRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-    }
+    private final ImageRepository imageRepository;
 
     @Override
-    public Product createProduct(ProductDto productDto) {
-        Category category = categoryRepository.findById(productDto.getCategoryId())
+    public ProductResponse createProduct(ProductRequest productRequest) throws IOException {
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Product product = new Product();
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice() != null ? productDto.getPrice() : 0.0);
-        product.setQuantity(productDto.getQuantity() != null ? productDto.getQuantity() : 0);
+        product.setName(productRequest.getName());
+        product.setDescription(productRequest.getDescription());
+        product.setPrice(productRequest.getPrice() != null ? productRequest.getPrice() : 0.0);
+        product.setQuantity(productRequest.getQuantity() != null ? productRequest.getQuantity() : 0);
         product.setCatagory(category);
 
-        return productRepository.save(product);
+        List<Image> images = new ArrayList<>();
+
+        for (MultipartFile file : productRequest.getFiles()) {
+            String imageUrl = imageServices.uploadFile(file);
+            Image image = new Image();
+            image.setImageURL(imageUrl);
+            image.setProduct(product);
+            images.add(image);
+        }
+        product.setImages(images);
+        Product addProduct = productRepository.save(product);
+        imageRepository.saveAll(images);
+        ProductResponse productResponse = ProductToProductResponse.convertToProduct(addProduct);
+        return productResponse;
     }
 
     @Override
-    public ProductDto getProductById(Long id) {
+    public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        ProductDto productDto = ProductToProductDto.convertToProduct(product);
-        return productDto;
+        ProductResponse productResponse = ProductToProductResponse.convertToProduct(product);
+        return productResponse;
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         List<Product> productList = productRepository.findAll();
         return productList.stream()
-                .map(product -> ProductToProductDto.convertToProduct(product))
+                .map(product -> ProductToProductResponse.convertToProduct(product))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void updateProduct(Long id, ProductDto productDto) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    public void updateProduct(Long id, ProductRequest productRequest) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
 
-        if (productDto.getName() != null) {
-            product.setName(productDto.getName());
+        if (productRequest.getName() != null) {
+            product.setName(productRequest.getName());
         }
-        if (productDto.getDescription() != null) {
-            product.setDescription(productDto.getDescription());
+        if (productRequest.getDescription() != null) {
+            product.setDescription(productRequest.getDescription());
         }
-        if (productDto.getPrice() != null) {
-            product.setPrice(productDto.getPrice());
+        if (productRequest.getPrice() != null) {
+            product.setPrice(productRequest.getPrice());
         } else if (product.getPrice() == null) {
             product.setPrice(0.0);
         }
-        if (productDto.getQuantity() != null) {
-            product.setQuantity(productDto.getQuantity());
+        if (productRequest.getQuantity() != null) {
+            product.setQuantity(productRequest.getQuantity());
         }
-        if (productDto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(productDto.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category with ID " + productDto.getCategoryId() + " not found"));
+        if (productRequest.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productRequest.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category with ID " + productRequest.getCategoryId() + " not found"));
             product.setCatagory(category);
         }
         productRepository.save(product);
@@ -92,11 +109,11 @@ public class ProductServicesImpl implements ProductsServices {
     }
 
     @Override
-    public List<ProductDto> getByName(String name) {
+    public List<ProductResponse> getByName(String name) {
         List<Product> productList = productRepository.findByNameContainingIgnoreCase(name);
-        List<ProductDto> productDtoList = productList.stream()
-                .map(product -> ProductToProductDto.convertToProduct(product))
+        List<ProductResponse> responseList = productList.stream()
+                .map(product -> ProductToProductResponse.convertToProduct(product))
                 .collect(Collectors.toList());
-        return productDtoList;
+        return responseList;
     }
 }

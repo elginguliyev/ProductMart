@@ -1,19 +1,20 @@
 package com.example.services.inter;
 
-import com.example.dto.CategoryDto;
+import com.example.request.CategoryRequest;
 import com.example.entites.Category;
+import com.example.response.CategoryResponse;
 
 import java.util.List;
 
 public interface CategoryServices {
 
-    Category createCategory(CategoryDto categoryDto);
+    Category createCategory(CategoryRequest categoryRequest);
 
-    CategoryDto getCategoryById(Long id);
+    CategoryResponse getCategoryById(Long id);
 
-    List<CategoryDto> getAllCategories();
+    List<CategoryResponse> getAllCategories();
 
-    void updateCategory(Long id, CategoryDto categoryDto);
+    void updateCategory(Long id, CategoryRequest categoryRequest);
 
     void deleteCategory(Long id);
 }

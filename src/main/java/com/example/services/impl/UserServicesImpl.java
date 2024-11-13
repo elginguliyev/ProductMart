@@ -1,11 +1,12 @@
 package com.example.services.impl;
 
-import com.example.dto.UserDto;
+import com.example.request.UserRequest;
 import com.example.entites.Role;
 import com.example.entites.User;
 import com.example.repository.UserRepository;
+import com.example.response.UserResponse;
 import com.example.services.inter.UserService;
-import com.example.utill.UserToUserDto;
+import com.example.dto.UserToUserResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,56 +29,56 @@ public class UserServicesImpl implements UserService {
     }
 
     @Override
-    public User createUser(UserDto userDto) {
+    public User createUser(UserRequest userRequest) {
 
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new RuntimeException("User with email " + userDto.getEmail() + " already exists");
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
+            throw new RuntimeException("User with email " + userRequest.getEmail() + " already exists");
         }
         User user = new User();
 
-        user.setName(userDto.getName());
-        user.setSurname(userDto.getSurname());
-        user.setUsername(userDto.getUsername());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setName(userRequest.getName());
+        user.setSurname(userRequest.getSurname());
+        user.setUsername(userRequest.getUsername());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         user.setRole(Role.USER);
         user.setCreatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserDto userDto = UserToUserDto.convertUserDto(user);
-        return userDto;
+        UserResponse userResponse = UserToUserResponse.convertUserDto(user);
+        return userResponse;
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         List<User> usersList = userRepository.findAll();
-        List<UserDto> userDtoList = usersList.stream()
-                .map(user -> UserToUserDto.convertUserDto(user))
+        List<UserResponse> responseList = usersList.stream()
+                .map(user -> UserToUserResponse.convertUserDto(user))
                 .collect(Collectors.toList());
 
-        return userDtoList;
+        return responseList;
     }
 
     @Override
-    public void updateUser(Long id, UserDto userDto) {
+    public void updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not Found"));
-        if (userDto.getUsername() != null) {
-            user.setUsername(userDto.getUsername());
+        if (userRequest.getUsername() != null) {
+            user.setUsername(userRequest.getUsername());
         }
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
+        if (userRequest.getName() != null) {
+            user.setName(userRequest.getName());
         }
-        if (userDto.getSurname() != null) {
-            user.setSurname(userDto.getSurname());
+        if (userRequest.getSurname() != null) {
+            user.setSurname(userRequest.getSurname());
         }
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
+        if (userRequest.getEmail() != null) {
+            user.setEmail(userRequest.getEmail());
         }
         userRepository.save(user);
 

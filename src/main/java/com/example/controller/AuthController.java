@@ -1,9 +1,10 @@
 package com.example.controller;
 
 
-import com.example.dto.UserDto;
+import com.example.request.UserRequest;
 import com.example.entites.User;
 import com.example.exception.MyException;
+import com.example.response.UserResponse;
 import com.example.security.MyTokenManager;
 import com.example.services.inter.UserService;
 import jakarta.validation.Valid;
@@ -38,13 +39,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<List<UserDto>> register(@Valid @RequestBody UserDto userDto, BindingResult br) {
+    public ResponseEntity<List<UserResponse>> register(@Valid @RequestBody UserRequest userRequest, BindingResult br) {
         if (br.hasErrors()){
             throw new MyException("Məlumatlar boş ola  bilməz !", br);
         }
-        userService.createUser(userDto);
-        List<UserDto> userDtoList = userService.getAllUsers();
-        return ResponseEntity.ok(userDtoList);
+        userService.createUser(userRequest);
+        List<UserResponse> responseList = userService.getAllUsers();
+        return ResponseEntity.ok(responseList);
     }
 
     @PostMapping("/login")

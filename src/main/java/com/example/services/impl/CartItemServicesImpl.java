@@ -1,7 +1,7 @@
 package com.example.services.impl;
 
-import com.example.dto.CartDto;
-import com.example.dto.CartItemDto;
+import com.example.request.CartDto;
+import com.example.request.CartItemDto;
 import com.example.entites.Cart;
 import com.example.entites.CartItem;
 import com.example.entites.User;
@@ -9,8 +9,8 @@ import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
 import com.example.repository.UserRepository;
 import com.example.services.inter.CartItemServices;
-import com.example.utill.CartItemToCartItemDto;
-import com.example.utill.CartToCartDto;
+import com.example.dto.CartItemToCartItemDto;
+import com.example.dto.CartToCartDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

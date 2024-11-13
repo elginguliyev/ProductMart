@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.request;
 
 import lombok.*;
 
@@ -9,9 +9,8 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class CategoryRequest {
 
     private String name;
-    List<ProductDto> productDtoList;
 
 }

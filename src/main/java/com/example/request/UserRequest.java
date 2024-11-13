@@ -1,9 +1,7 @@
-package com.example.dto;
+package com.example.request;
 
-import com.example.entites.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -14,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class UserRequest {
 
     @NotBlank(message = "Zəhmət olmasa  adınızı daxil edin ")
     @Size(min = 3, max = 15, message = "Username 3 ilə 15 simvol arasında olmalıdır")

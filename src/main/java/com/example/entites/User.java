@@ -1,6 +1,7 @@
 package com.example.entites;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "user_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -43,11 +44,20 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Cart> cart;
 
+//    @CreationTimestamp
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = LocalDateTime.of(
+                now.getYear(),
+                now.getMonth(),
+                now.getDayOfMonth(),
+                now.getHour(),
+                now.getMinute()
+        );
     }
 }

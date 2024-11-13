@@ -1,7 +1,7 @@
 package com.example.services.inter;
 
-import com.example.dto.CartDto;
-import com.example.dto.CartItemDto;
+import com.example.request.CartDto;
+import com.example.request.CartItemDto;
 
 import java.util.List;
 

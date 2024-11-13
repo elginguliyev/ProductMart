@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.dto.CartDto;
-import com.example.dto.CartItemDto;
+import com.example.request.CartDto;
+import com.example.request.CartItemDto;
 import com.example.services.inter.CartItemServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

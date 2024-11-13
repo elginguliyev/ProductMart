@@ -1,22 +1,24 @@
 package com.example.services.inter;
 
-import com.example.dto.ProductDto;
+import com.example.request.ProductRequest;
 import com.example.entites.Product;
+import com.example.response.ProductResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductsServices {
 
-    Product createProduct(ProductDto productDto);
+    ProductResponse createProduct(ProductRequest productRequest) throws IOException;
 
-    ProductDto getProductById(Long id);
+    ProductResponse getProductById(Long id);
 
-    List<ProductDto> getAllProducts();
+    List<ProductResponse> getAllProducts();
 
-    void updateProduct(Long id, ProductDto productDto);
+    void updateProduct(Long id, ProductRequest productRequest);
 
     void deleteProduct(Long id);
 
-    List<ProductDto> getByName(String name);
+    List<ProductResponse> getByName(String name);
 
 }
