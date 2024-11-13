@@ -9,6 +9,7 @@ import com.example.utill.UserToUserDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,8 +40,8 @@ public class UserServicesImpl implements UserService {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        Role role = Role.valueOf(userDto.getRole().toUpperCase());
-        user.setRole(role);
+        user.setRole(Role.USER);
+        user.setCreatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 

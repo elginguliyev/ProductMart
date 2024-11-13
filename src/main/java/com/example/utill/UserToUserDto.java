@@ -11,7 +11,7 @@ public class UserToUserDto {
         userDto.setSurname(user.getSurname());
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
-        userDto.setRole(user.getRole().name());
+        userDto.setCreatedAt(user.getCreatedAt());
         return userDto;
     }
 }

@@ -3,6 +3,7 @@ package com.example.entites;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -41,6 +42,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Cart> cart;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
 
 }
