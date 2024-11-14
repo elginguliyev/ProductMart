@@ -52,7 +52,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category catagory;
 
-    @OneToMany(mappedBy = "product" , cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL)
     private List<Image> images=new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Comment> comments=new ArrayList<>();
 
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "name")
@@ -44,8 +45,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Cart> cart;
 
-//    @CreationTimestamp
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
