@@ -23,4 +23,6 @@ public class ProductResponse {
 
     private List<ImageResponse> imageURLs;
 
+    private List<CommentResponse> comments;
+
 }

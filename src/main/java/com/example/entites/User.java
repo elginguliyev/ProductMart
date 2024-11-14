@@ -45,7 +45,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Cart> cart;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)

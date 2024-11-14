@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.example.response.CommentResponse;
 import com.example.response.ImageResponse;
 import com.example.entites.Product;
 import com.example.response.ProductResponse;
@@ -21,6 +22,12 @@ public class ProductToProductResponse {
                 .collect(Collectors.toList());
 
         productResponse.setImageURLs(imageResponses);
+
+        List<CommentResponse> commentResponses = product.getComments().stream()
+                .map(comment -> new CommentResponse(comment.getContent(), comment.getCreatedAt(), comment.getUser().getId()))
+                .collect(Collectors.toList());
+
+        productResponse.setComments(commentResponses);
         return productResponse;
     }
 }
