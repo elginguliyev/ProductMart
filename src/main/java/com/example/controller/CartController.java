@@ -16,7 +16,7 @@ public class CartController {
         this.cartServices = cartServices;
     }
 
-    @GetMapping(path = "cart")
+    @GetMapping(path = "cart/{cartId}")
     public ResponseEntity<CartResponse> getCarts(@RequestParam Long cartId) {
         CartResponse cartResponse = cartServices.getCart(cartId);
         return ResponseEntity.ok(cartResponse);
