@@ -1,7 +1,8 @@
 package com.example.controller;
 
-import com.example.request.CartDto;
-import com.example.request.CartItemDto;
+import com.example.request.CartItemRequest;
+import com.example.response.CartItemResponse;
+import com.example.response.CartResponse;
 import com.example.services.inter.CartItemServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,38 +19,39 @@ public class CartItemController {
     private final CartItemServices cartItemServices;
 
     @PostMapping(path = "user/{userId}/cart/add/cart-item")
-    public ResponseEntity<CartDto> addCartItem(@RequestBody CartItemDto cartItemDto,
-                                               @PathVariable Long userId) {
-        CartDto cartDto = cartItemServices.createCartItem(cartItemDto, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
+    public ResponseEntity<CartResponse> addCartItem(@RequestBody CartItemRequest cartItemRequest,
+                                                    @PathVariable Long userId) {
+        CartResponse cartResponse = cartItemServices.createCartItem(cartItemRequest, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
     }
 
     @DeleteMapping(path = "user/{userId}/cart/cart-item/{cartItemId}")
-    public ResponseEntity<CartDto> removeCartItem(@PathVariable Long userId,
+    public ResponseEntity<CartResponse> removeCartItem(@PathVariable Long userId,
                                                   @PathVariable Long cartItemId) {
-        CartDto cartDto = cartItemServices.deleteCartItem(userId, cartItemId);
+        CartResponse cartResponse = cartItemServices.deleteCartItem(userId, cartItemId);
 
-        return ResponseEntity.ok(cartDto);
+        return ResponseEntity.ok(cartResponse);
     }
 
     @GetMapping(path = "user/{userId}/cart/cart-items")
-    public ResponseEntity<List<CartItemDto>> getAllCartItem(@PathVariable Long userId) {
-        List<CartItemDto> cartItemDtos = cartItemServices.getAllCartItems(userId);
-        return ResponseEntity.ok(cartItemDtos);
+    public ResponseEntity<List<CartItemResponse>> getAllCartItem(@PathVariable Long userId) {
+        List<CartItemResponse> cartItemResponses = cartItemServices.getAllCartItems(userId);
+        return ResponseEntity.ok(cartItemResponses);
     }
 
     @PutMapping(path = "user/{userId}/cart/cart-item/{cartItemId}")
-    public ResponseEntity<CartDto> updateCartItem(@PathVariable Long userId,
+    public ResponseEntity<CartResponse> updateCartItem(@PathVariable Long userId,
                                                   @PathVariable Long cartItemId,
-                                                  @RequestBody CartItemDto cartItemDto) {
-        CartDto cartDto = cartItemServices.updateCartItem(userId, cartItemId, cartItemDto);
-        return ResponseEntity.ok(cartDto);
+                                                  @RequestBody CartItemRequest cartItemRequest) {
+        CartResponse cartResponse = cartItemServices.updateCartItem(userId, cartItemId, cartItemRequest);
+        return ResponseEntity.ok(cartResponse);
     }
 
     @GetMapping(path = "user/{userId}/cart/cart-item/{cartItemId}")
-    public ResponseEntity<CartItemDto> getByIDCartItem(@PathVariable Long userId,
+    public ResponseEntity<CartItemResponse> getByIDCartItem(@PathVariable Long userId,
                                                        @PathVariable Long cartItemId) {
-        CartItemDto cartItemDto = cartItemServices.getCartItemById(userId, cartItemId);
-        return ResponseEntity.ok(cartItemDto);
+
+        CartItemResponse cartItemResponse = cartItemServices.getCartItemById(userId, cartItemId);
+        return ResponseEntity.ok(cartItemResponse);
     }
 }

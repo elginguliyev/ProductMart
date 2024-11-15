@@ -1,21 +1,11 @@
 package com.example.services.inter;
 
-import com.example.request.CartDto;
-import com.example.request.CartItemDto;
-import com.example.entites.Cart;
 
-import java.util.List;
+import com.example.response.CartResponse;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface CartServices {
 
-    Cart createCart(CartItemDto cartItemDto);
-
-    CartDto getCartById(Long id);
-
-    List<CartDto> getAllCartss();
-
-
-
-
-
+    CartResponse getCart(Long cartId);
 }

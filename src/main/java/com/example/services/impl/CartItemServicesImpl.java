@@ -1,16 +1,17 @@
 package com.example.services.impl;
 
-import com.example.request.CartDto;
-import com.example.request.CartItemDto;
 import com.example.entites.Cart;
 import com.example.entites.CartItem;
 import com.example.entites.User;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
 import com.example.repository.UserRepository;
+import com.example.request.CartItemRequest;
+import com.example.response.CartItemResponse;
+import com.example.response.CartResponse;
 import com.example.services.inter.CartItemServices;
-import com.example.dto.CartItemToCartItemDto;
-import com.example.dto.CartToCartDto;
+import com.example.dto.CartItemToCartItemResponse;
+import com.example.dto.CartToCartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class CartItemServicesImpl implements CartItemServices {
     private final UserRepository userRepository;
 
     @Override
-    public CartDto createCartItem(CartItemDto cartItemDto, Long userid) {
+    public CartResponse createCartItem(CartItemRequest cartItemRequest, Long userid) {
 
 
         User user = userRepository.findById(userid).orElseThrow(() -> new RuntimeException("User not found"));
@@ -43,35 +44,35 @@ public class CartItemServicesImpl implements CartItemServices {
         }
 
         CartItem existingCartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProductId().equals(cartItemDto.getProductId()))
+                .filter(item -> item.getProductId().equals(cartItemRequest.getProductId()))
                 .findFirst()
                 .orElse(null);
 
         if (existingCartItem != null) {
-            int newQuantity = existingCartItem.getQuantity() + cartItemDto.getQuantity();
+            int newQuantity = existingCartItem.getQuantity() + cartItemRequest.getQuantity();
             existingCartItem.setQuantity(newQuantity);
 
-            double newAmount = existingCartItem.getPrice() * cartItemDto.getQuantity();
+            double newAmount = existingCartItem.getPrice() * cartItemRequest.getQuantity();
             cart.setTotalAmount(cart.getTotalAmount() + newAmount);
         } else {
             CartItem cartItem = new CartItem();
-            cartItem.setProductId(cartItemDto.getProductId());
-            cartItem.setPrice(cartItemDto.getPrice());
-            cartItem.setQuantity(cartItemDto.getQuantity());
+            cartItem.setProductId(cartItemRequest.getProductId());
+            cartItem.setPrice(cartItemRequest.getPrice());
+            cartItem.setQuantity(cartItemRequest.getQuantity());
             cartItem.setCart(cart);
 
-            double newAmount = cartItemDto.getPrice() * cartItemDto.getQuantity();
+            double newAmount = cartItemRequest.getPrice() * cartItemRequest.getQuantity();
 
             cart.setTotalAmount(cart.getTotalAmount() + newAmount);
             cart.getCartItems().add(cartItem);
         }
         Cart cart1 = cartRepository.save(cart);
-        return CartToCartDto.convertToCartDto(cart1);
+        return CartToCartResponse.convertToCartResp(cart1);
 
     }
 
     @Override
-    public CartItemDto getCartItemById(Long userId, Long cartItemId) {
+    public CartItemResponse getCartItemById(Long userId, Long cartItemId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = cartRepository.findByUser(user);
 
@@ -80,22 +81,22 @@ public class CartItemServicesImpl implements CartItemServices {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
-        return CartItemToCartItemDto.convertToCartItemDto(item);
+        return CartItemToCartItemResponse.convertToCartItemResp(item);
     }
 
     @Override
-    public List<CartItemDto> getAllCartItems(Long userId) {
+    public List<CartItemResponse> getAllCartItems(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = cartRepository.findByUser(user);
 
         List<CartItem> cartItemList = cart.getCartItems();
         return cartItemList.stream()
-                .map(cartItem -> CartItemToCartItemDto.convertToCartItemDto(cartItem))
+                .map(cartItem -> CartItemToCartItemResponse.convertToCartItemResp(cartItem))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CartDto updateCartItem(Long userId, Long cartItemId, CartItemDto cartItemDto) {
+    public CartResponse updateCartItem(Long userId, Long cartItemId, CartItemRequest cartItemRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = cartRepository.findByUser(user);
 
@@ -104,14 +105,14 @@ public class CartItemServicesImpl implements CartItemServices {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
-        double newAmount = existingCartItem.getPrice() * cartItemDto.getQuantity();
+        double newAmount = existingCartItem.getPrice() * cartItemRequest.getQuantity();
         double currentAmount = existingCartItem.getPrice() * existingCartItem.getQuantity();
 
         if (existingCartItem != null) {
-            existingCartItem.setQuantity(cartItemDto.getQuantity());
+            existingCartItem.setQuantity(cartItemRequest.getQuantity());
         }
 
-        if (cartItemDto.getQuantity() > existingCartItem.getQuantity()) {
+        if (cartItemRequest.getQuantity() > existingCartItem.getQuantity()) {
             cart.setTotalAmount(cart.getTotalAmount() + newAmount);
         } else {
             cart.setTotalAmount(cart.getTotalAmount() + newAmount - currentAmount);
@@ -119,11 +120,11 @@ public class CartItemServicesImpl implements CartItemServices {
 
 
         Cart updateCart = cartRepository.save(cart);
-        return CartToCartDto.convertToCartDto(updateCart);
+        return CartToCartResponse.convertToCartResp(updateCart);
     }
 
     @Override
-    public CartDto deleteCartItem(Long useriId, Long cartItemId) {
+    public CartResponse deleteCartItem(Long useriId, Long cartItemId) {
         User user = userRepository.findById(useriId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Cart cart = cartRepository.findByUser(user);
@@ -143,6 +144,6 @@ public class CartItemServicesImpl implements CartItemServices {
         cartItemRepository.deleteById(cartItemId);
 
         Cart updateCart = cartRepository.save(cart);
-        return CartToCartDto.convertToCartDto(updateCart);
+        return CartToCartResponse.convertToCartResp(updateCart);
     }
 }

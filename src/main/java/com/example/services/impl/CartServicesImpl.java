@@ -1,67 +1,28 @@
 package com.example.services.impl;
 
-import com.example.request.CartDto;
-import com.example.request.CartItemDto;
+import com.example.dto.CartToCartResponse;
 import com.example.entites.Cart;
-import com.example.entites.CartItem;
-import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
+import com.example.response.CartResponse;
 import com.example.services.inter.CartServices;
-import com.example.dto.CartToCartDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
+@RequiredArgsConstructor
 public class CartServicesImpl implements CartServices {
 
 
-    private CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
-
-    private CartItemRepository cartItemRepository;
-
-    public CartServicesImpl(CartRepository cartRepository,
-                            CartItemRepository cartItemRepository) {
-        this.cartRepository = cartRepository;
-        this.cartItemRepository = cartItemRepository;
-    }
 
     @Override
-    public Cart createCart(CartItemDto cartItemDto) {
+    public CartResponse getCart(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        Cart cart = new Cart();
-        CartItem cartItem = new CartItem();
-        cartItem.setProductId(cartItemDto.getProductId());
-        cartItem.setPrice(cartItemDto.getPrice());
-        cartItem.setQuantity(cartItemDto.getQuantity());
-        cartItem.setCart(cart);
+        CartResponse cartResponse = CartToCartResponse.convertToCartResp(cart);
 
-        cart.setTotalAmount(cartItemDto.getPrice() * cartItemDto.getQuantity());
-        cart.getCartItems().add(cartItem);
-
-        Cart savedCart = cartRepository.save(cart);
-        cartItemRepository.save(cartItem);
-
-
-        return savedCart;
+        return cartResponse;
     }
-
-    @Override
-    public CartDto getCartById(Long id) {
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cart not Found"));
-        return CartToCartDto.convertToCartDto(cart);
-    }
-
-    @Override
-    public List<CartDto> getAllCartss() {
-        List<Cart> carts = cartRepository.findAll();
-        return carts.stream()
-                .map(cart -> CartToCartDto.convertToCartDto(cart))
-                .collect(Collectors.toList());
-    }
-
-
 }

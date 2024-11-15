@@ -1,16 +1,15 @@
-package com.example.request;
+package com.example.response;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class CartDto {
+public class CartResponse {
 
-    private Long id;
     private Long userId;
     private Double totalAmount;
-    private List<CartItemDto> cartItems;
+    private List<CartItemResponse> cartItems;
 
 
 }
