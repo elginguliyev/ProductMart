@@ -41,6 +41,7 @@ public class ProductServicesImpl implements ProductsServices {
         product.setPrice(productRequest.getPrice() != null ? productRequest.getPrice() : 0.0);
         product.setQuantity(productRequest.getQuantity() != null ? productRequest.getQuantity() : 0);
         product.setCatagory(category);
+        product.setLocation(productRequest.getLocation());
 
         List<Image> images = new ArrayList<>();
 
@@ -95,6 +96,9 @@ public class ProductServicesImpl implements ProductsServices {
         if (productRequest.getQuantity() != null) {
             product.setQuantity(productRequest.getQuantity());
         }
+        if (productRequest.getLocation()!=null){
+            product.setLocation(productRequest.getLocation());
+        }
         if (productRequest.getCategoryId() != null) {
             Category category = categoryRepository.findById(productRequest.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category with ID " + productRequest.getCategoryId() + " not found"));
@@ -116,4 +120,15 @@ public class ProductServicesImpl implements ProductsServices {
                 .collect(Collectors.toList());
         return responseList;
     }
+
+    @Override
+    public List<ProductResponse> getByNameAndLocation(String name, String location) {
+        List<Product> productList = productRepository.findByNameContainingAndLocation(name, location);
+
+       return productList.stream()
+                .map(product -> ProductToProductResponse.convertToProduct(product))
+                .collect(Collectors.toList());
+    }
+
+
 }

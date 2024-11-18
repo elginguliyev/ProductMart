@@ -36,7 +36,7 @@ public class ProductController {
 
     @PutMapping(path = "{id}/product")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
-                                                        @RequestBody ProductRequest productDto) {
+                                                         @RequestBody ProductRequest productDto) {
         productsServices.updateProduct(id, productDto);
 
         ProductResponse productResponse = getByIdProduct(id).getBody();
@@ -50,8 +50,8 @@ public class ProductController {
     }
 
     @PostMapping(path = "add/product")
-    public ResponseEntity<String> addProduct(@ModelAttribute  ProductRequest productDto) throws IOException {
-         productsServices.createProduct(productDto);
+    public ResponseEntity<String> addProduct(@ModelAttribute ProductRequest productDto) throws IOException {
+        productsServices.createProduct(productDto);
         return ResponseEntity.ok("Məhsul uğurla əlavə edildiş");
     }
 
@@ -59,6 +59,13 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> getProductByName(@RequestParam(name = "param") String name) {
         List<ProductResponse> responseList = productsServices.getByName(name);
         return ResponseEntity.ok(responseList);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getByNameAndLocation(@RequestParam String name,
+                                                                      @RequestParam String location) {
+        List<ProductResponse> productResponses = productsServices.getByNameAndLocation(name, location);
+        return ResponseEntity.ok(productResponses);
     }
 
 }

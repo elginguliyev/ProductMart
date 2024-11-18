@@ -21,6 +21,8 @@ public class ProductResponse {
 
     private Long categoryId;
 
+    private String location;
+
     private List<ImageResponse> imageURLs;
 
     private List<CommentResponse> comments;

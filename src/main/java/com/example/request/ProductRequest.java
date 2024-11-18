@@ -22,6 +22,8 @@ public class ProductRequest {
 
     private Long categoryId;
 
+    private String location;
+
     private List<MultipartFile> files;
 
 }

@@ -41,6 +41,9 @@ public class Product {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "location")
+    private String location;
+
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
@@ -52,10 +55,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category catagory;
 
-    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL)
-    private List<Image> images=new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Comment> comments=new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
 }
