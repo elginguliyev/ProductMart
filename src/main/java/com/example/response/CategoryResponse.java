@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResponse {
-
+    private Long id;
     private String name;
     List<ProductResponse> productResponseList;
 

@@ -53,7 +53,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category catagory;
+    private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();

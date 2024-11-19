@@ -13,6 +13,7 @@ public class CategoryToCategoryResponse {
 
     public static CategoryResponse concertToCategory(Category category) {
         CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setId(category.getId());
         categoryResponse.setName(category.getName());
         List<ProductResponse> responseList = category.getProducts().stream()
                 .map(product -> ProductToProductResponse.convertToProduct(product))

@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "catagory")
+@Table(name = "category")
 public class Category {
 
 
@@ -25,6 +25,6 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "catagory")
+    @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

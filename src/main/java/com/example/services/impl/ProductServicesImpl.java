@@ -40,7 +40,7 @@ public class ProductServicesImpl implements ProductsServices {
         product.setDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice() != null ? productRequest.getPrice() : 0.0);
         product.setQuantity(productRequest.getQuantity() != null ? productRequest.getQuantity() : 0);
-        product.setCatagory(category);
+        product.setCategory(category);
         product.setLocation(productRequest.getLocation());
 
         List<Image> images = new ArrayList<>();
@@ -96,13 +96,13 @@ public class ProductServicesImpl implements ProductsServices {
         if (productRequest.getQuantity() != null) {
             product.setQuantity(productRequest.getQuantity());
         }
-        if (productRequest.getLocation()!=null){
+        if (productRequest.getLocation() != null) {
             product.setLocation(productRequest.getLocation());
         }
         if (productRequest.getCategoryId() != null) {
             Category category = categoryRepository.findById(productRequest.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category with ID " + productRequest.getCategoryId() + " not found"));
-            product.setCatagory(category);
+            product.setCategory(category);
         }
         productRepository.save(product);
     }
@@ -114,7 +114,7 @@ public class ProductServicesImpl implements ProductsServices {
 
     @Override
     public List<ProductResponse> getByName(String name) {
-        List<Product> productList = productRepository.findByNameContainingIgnoreCase(name);
+        List<Product> productList = productRepository.findByNameContaining(name);
         List<ProductResponse> responseList = productList.stream()
                 .map(product -> ProductToProductResponse.convertToProduct(product))
                 .collect(Collectors.toList());
@@ -122,12 +122,32 @@ public class ProductServicesImpl implements ProductsServices {
     }
 
     @Override
-    public List<ProductResponse> getByNameAndLocation(String name, String location) {
-        List<Product> productList = productRepository.findByNameContainingAndLocation(name, location);
+    public List<ProductResponse> getByNameAndLocationAndCategory(String name, String location, String categoryName) {
+        if (location == null && categoryName == null) {
 
-       return productList.stream()
-                .map(product -> ProductToProductResponse.convertToProduct(product))
-                .collect(Collectors.toList());
+            List<Product> productList = productRepository.findByNameContaining(name);
+            return productList.stream()
+                    .map(product -> ProductToProductResponse.convertToProduct(product))
+                    .collect(Collectors.toList());
+        } else if (location == null) {
+
+            List<Product> productList = productRepository.findByNameContainingAndCategory_Name(name, categoryName);
+            return productList.stream()
+                    .map(product -> ProductToProductResponse.convertToProduct(product))
+                    .collect(Collectors.toList());
+        } else if (categoryName == null) {
+
+            List<Product> productList = productRepository.findByNameContainingAndLocation(name, location);
+            return productList.stream()
+                    .map(product -> ProductToProductResponse.convertToProduct(product))
+                    .collect(Collectors.toList());
+        } else {
+            List<Product> productList = productRepository.findByNameContainingAndLocationAndCategory_Name(name, location, categoryName);
+            return productList.stream()
+                    .map(product -> ProductToProductResponse.convertToProduct(product))
+                    .collect(Collectors.toList());
+        }
+
     }
 
 

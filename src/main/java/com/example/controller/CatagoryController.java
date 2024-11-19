@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/")
+@RequestMapping(path = "/api/")
 public class CatagoryController {
 
     private CategoryServices categoryServices;
@@ -43,7 +43,7 @@ public class CatagoryController {
         CategoryResponse categoryResponse = getByIdCategory(id).getBody();
         return ResponseEntity.ok(categoryResponse);
     }
-
+@PatchMapping @PutMapping
     @PostMapping(path = "add/category")
     public ResponseEntity<String> addCategory(@RequestBody CategoryRequest categoryRequest) {
         Category category = categoryServices.createCategory(categoryRequest);

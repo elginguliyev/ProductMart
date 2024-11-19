@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/")
+@RequestMapping(path = "/api/")
 public class ProductController {
 
 
@@ -28,13 +28,13 @@ public class ProductController {
     }
 
 
-    @GetMapping(path = "{id}/product")
+    @GetMapping(path = "product/{id}")
     public ResponseEntity<ProductResponse> getByIdProduct(@PathVariable Long id) {
         ProductResponse productResponse = productsServices.getProductById(id);
         return ResponseEntity.ok(productResponse);
     }
 
-    @PutMapping(path = "{id}/product")
+    @PutMapping(path = "product/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
                                                          @RequestBody ProductRequest productDto) {
         productsServices.updateProduct(id, productDto);
@@ -43,28 +43,38 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @DeleteMapping("{id}/product")
+    @DeleteMapping("product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productsServices.deleteProduct(id);
         return ResponseEntity.ok("Məhsul uğurla silindiş");
     }
 
-    @PostMapping(path = "add/product")
-    public ResponseEntity<String> addProduct(@ModelAttribute ProductRequest productDto) throws IOException {
-        productsServices.createProduct(productDto);
+    @PostMapping(path = "add-product")
+    public ResponseEntity<String> addProduct(@ModelAttribute ProductRequest productRequest) throws IOException {
+        System.out.println(productRequest.getName());
+
+        productsServices.createProduct(productRequest);
         return ResponseEntity.ok("Məhsul uğurla əlavə edildiş");
     }
 
-    @GetMapping(path = "products/search")
+    @GetMapping
     public ResponseEntity<List<ProductResponse>> getProductByName(@RequestParam(name = "param") String name) {
         List<ProductResponse> responseList = productsServices.getByName(name);
         return ResponseEntity.ok(responseList);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> getByNameAndLocation(@RequestParam String name,
-                                                                      @RequestParam String location) {
-        List<ProductResponse> productResponses = productsServices.getByNameAndLocation(name, location);
+    @GetMapping(path = "products/search")
+    public ResponseEntity<List<ProductResponse>> getByNameAndLocation(@RequestParam(name = "name") String name,
+                                                                      @RequestParam(name = "location", required = false) String location,
+                                                                          @RequestParam(name = "category" , required = false) String categoryName) {
+
+        if (location == null) {
+            location = "";  // Eğer location boşsa, boş bir string ile değiştir.
+        }
+        if (categoryName == null) {
+            categoryName = "";  // Eğer category boşsa, boş bir string ile değiştir.
+        }
+        List<ProductResponse> productResponses = productsServices.getByNameAndLocationAndCategory(name, location, categoryName);
         return ResponseEntity.ok(productResponses);
     }
 

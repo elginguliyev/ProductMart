@@ -17,7 +17,7 @@ public class ProductToProductResponse {
         productResponse.setPrice(product.getPrice());
         productResponse.setQuantity(product.getQuantity());
         productResponse.setLocation(product.getLocation());
-        productResponse.setCategoryId(product.getCatagory().getId());
+        productResponse.setCategoryId(product.getCategory().getId());
         List<ImageResponse> imageResponses = product.getImages().stream()
                 .map(image -> new ImageResponse(image.getImageURL()))
                 .collect(Collectors.toList());

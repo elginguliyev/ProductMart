@@ -21,6 +21,6 @@ public interface ProductsServices {
 
     List<ProductResponse> getByName(String name);
 
-    List<ProductResponse> getByNameAndLocation(String name, String location);
+    List<ProductResponse> getByNameAndLocationAndCategory(String name, String location, String categoryName);
 
 }
