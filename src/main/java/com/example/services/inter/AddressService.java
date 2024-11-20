@@ -4,15 +4,18 @@ import com.example.request.AddressRequest;
 import com.example.response.AddressResponse;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.util.List;
+
 @Service
 public interface AddressService {
-     AddressResponse getAllAddress();
+    List<AddressResponse> getAllAddress(Principal principal);
 
-     AddressResponse getById(Long id);
+    AddressResponse getById(Long id);
 
-     void addAddress(AddressRequest addressRequest);
+    void addAddress(Principal principal, AddressRequest addressRequest);
 
-     void updateAddress(AddressRequest addressRequest);
+    void updateAddress(AddressRequest addressRequest);
 
-     void deleteAddress(Long id);
+    void deleteAddress(Principal principal, Long id);
 }

@@ -16,7 +16,7 @@ public class Address {
     private String street;
     @Column(name = "phone")
     private String phoneNumber;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

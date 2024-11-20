@@ -6,6 +6,7 @@ import com.example.services.inter.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -43,5 +44,12 @@ public class UserController {
     public ResponseEntity<String> deleteByUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("User with ID " + id + " deleted successfully");
+    }
+
+
+    @GetMapping("user-info")
+    public String getUserInfo(Principal principal) {
+        String username = principal.getName(); // Hal-hazırda giriş etmiş istifadəçinin adı
+        return "Current User: " + username;
     }
 }

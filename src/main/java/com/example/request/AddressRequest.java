@@ -8,6 +8,4 @@ public class AddressRequest {
   private String city;
   private String street;
   private String phoneNumber;
-  private Long userId;
-
 }
