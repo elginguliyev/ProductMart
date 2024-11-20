@@ -43,8 +43,8 @@ public class CatagoryController {
         CategoryResponse categoryResponse = getByIdCategory(id).getBody();
         return ResponseEntity.ok(categoryResponse);
     }
-@PatchMapping @PutMapping
-    @PostMapping(path = "add/category")
+
+    @PostMapping(path = "add-category")
     public ResponseEntity<String> addCategory(@RequestBody CategoryRequest categoryRequest) {
         Category category = categoryServices.createCategory(categoryRequest);
         return ResponseEntity.ok(category.getName() + " created successfully");

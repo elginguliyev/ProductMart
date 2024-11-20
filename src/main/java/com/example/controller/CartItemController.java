@@ -13,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/")
+@RequestMapping(path = "/api/")
 public class CartItemController {
 
     private final CartItemServices cartItemServices;
 
-    @PostMapping(path = "user/{userId}/cart/add/cart-item")
+    @PostMapping(path = "user/{userId}/cart/add-cart-item")
     public ResponseEntity<CartResponse> addCartItem(@RequestBody CartItemRequest cartItemRequest,
                                                     @PathVariable Long userId) {
         CartResponse cartResponse = cartItemServices.createCartItem(cartItemRequest, userId);
