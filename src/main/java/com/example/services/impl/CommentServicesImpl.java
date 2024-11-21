@@ -11,6 +11,8 @@ import com.example.services.inter.CommentServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServicesImpl implements CommentServices {
@@ -22,9 +24,9 @@ public class CommentServicesImpl implements CommentServices {
     private final ProductRepository productRepository;
 
     @Override
-    public void addComment(CommentRequest commentRequest) {
+    public void addComment(Principal principal, CommentRequest commentRequest) {
 
-        User user = userRepository.findById(commentRequest.getUserId())
+        User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Product product = productRepository.findById(commentRequest.getProductId())
@@ -38,16 +40,23 @@ public class CommentServicesImpl implements CommentServices {
     }
 
     @Override
-    public void updateComment(CommentRequest commentRequest) {
-        Comment comment = commentRepository.findById(commentRequest.getId())
-                .orElseThrow(() -> new RuntimeException("Commnet not found"));
+    public void updateComment(Principal principal, Long commentId, CommentRequest commentRequest) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        Comment comment = commentRepository.findByIdAndUser(commentId, user);
 
         comment.setContent(commentRequest.getContent());
         commentRepository.save(comment);
     }
 
     @Override
-    public void deleteComment(Long commentId) {
-        commentRepository.deleteById(commentId);
+    public void deleteComment(Principal principal, Long commentId) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Comment comment = commentRepository.findByUser(user);
+
+        commentRepository.delete(comment);
     }
 }
