@@ -36,9 +36,21 @@ public class AddressServicesImpl implements AddressService {
     }
 
     @Override
-    public AddressResponse getById(Long id) {
-        return null;
+    public AddressResponse getById(Principal principal, Long id) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not Found"));
+
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Address not  fount"));
+
+        if (address.getUser().equals(user)) {
+            throw new RuntimeException("You can only delete your own address");
+        }
+         return AddressToAddressResponse.toDTO(address);
     }
+
+
+
 
     @Override
     public void addAddress(Principal principal, AddressRequest addressRequest) {

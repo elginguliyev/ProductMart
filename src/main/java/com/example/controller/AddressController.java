@@ -37,6 +37,12 @@ public class AddressController {
     public ResponseEntity<List<AddressResponse>> getAllAddress(Principal principal) {
         List<AddressResponse> addressResponses = addressService.getAllAddress(principal);
         return ResponseEntity.ok(addressResponses);
-
     }
+
+    @DeleteMapping(path = "address/{id}")
+    public ResponseEntity<AddressResponse> getById(Principal principal, @PathVariable Long id) {
+        AddressResponse addressResponse = addressService.getById(principal, id);
+        return ResponseEntity.status(HttpStatus.OK).body(addressResponse);
+    }
+
 }

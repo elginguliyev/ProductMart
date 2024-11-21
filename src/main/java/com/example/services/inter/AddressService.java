@@ -11,7 +11,7 @@ import java.util.List;
 public interface AddressService {
     List<AddressResponse> getAllAddress(Principal principal);
 
-    AddressResponse getById(Long id);
+    AddressResponse getById(Principal principal, Long id);
 
     void addAddress(Principal principal, AddressRequest addressRequest);
 
