@@ -1,10 +1,12 @@
 package com.example.entites;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.type.ConvertedBasicArrayType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,14 +37,16 @@ public class Product {
     private Double price;
 
     @Column(name = "quantity")
-    private Integer quantity;
-
+    private int quantity;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "location")
     private String location;
+
+    @OneToOne(mappedBy = "product")
+    private CartItem cartItem;
 
     @PrePersist
     protected void onCreate() {

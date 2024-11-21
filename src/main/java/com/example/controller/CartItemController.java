@@ -19,14 +19,14 @@ public class CartItemController {
 
     private final CartItemServices cartItemServices;
 
-    @PostMapping(path = "cart/add-cart-item")
+    @PostMapping(path = "cart/add-cartitem")
     public ResponseEntity<CartResponse> addCartItem(@RequestBody CartItemRequest cartItemRequest,
                                                     Principal principal) {
         CartResponse cartResponse = cartItemServices.createCartItem(cartItemRequest, principal);
         return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
     }
 
-    @DeleteMapping(path = "cart/cart-item/{cartItemId}")
+    @DeleteMapping(path = "cart/cartitem/{cartItemId}")
     public ResponseEntity<CartResponse> removeCartItem(Principal principal ,
                                                   @PathVariable Long cartItemId) {
         CartResponse cartResponse = cartItemServices.deleteCartItem(principal, cartItemId);
@@ -34,13 +34,13 @@ public class CartItemController {
         return ResponseEntity.ok(cartResponse);
     }
 
-    @GetMapping(path = "cart/cart-items")
+    @GetMapping(path = "cart/cartitems")
     public ResponseEntity<List<CartItemResponse>> getAllCartItem(Principal principal) {
         List<CartItemResponse> cartItemResponses = cartItemServices.getAllCartItems(principal);
         return ResponseEntity.ok(cartItemResponses);
     }
 
-    @PutMapping(path = "cart/cart-item/{cartItemId}")
+    @PutMapping(path = "cart/cartitem/{cartItemId}")
     public ResponseEntity<CartResponse> updateCartItem(Principal principal,
                                                   @PathVariable Long cartItemId,
                                                   @RequestBody CartItemRequest cartItemRequest) {
@@ -48,7 +48,7 @@ public class CartItemController {
         return ResponseEntity.ok(cartResponse);
     }
 
-    @GetMapping(path = "cart/cart-item/{cartItemId}")
+    @GetMapping(path = "cart/cartitem/{cartItemId}")
     public ResponseEntity<CartItemResponse> getByIDCartItem(Principal principal,
                                                        @PathVariable Long cartItemId) {
 

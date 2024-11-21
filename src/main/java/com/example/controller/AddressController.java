@@ -39,7 +39,7 @@ public class AddressController {
         return ResponseEntity.ok(addressResponses);
     }
 
-    @DeleteMapping(path = "address/{id}")
+    @GetMapping(path = "address/{id}")
     public ResponseEntity<AddressResponse> getById(Principal principal, @PathVariable Long id) {
         AddressResponse addressResponse = addressService.getById(principal, id);
         return ResponseEntity.status(HttpStatus.OK).body(addressResponse);

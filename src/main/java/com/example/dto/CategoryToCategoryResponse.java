@@ -19,7 +19,7 @@ public class CategoryToCategoryResponse {
                 .map(product -> ProductToProductResponse.convertToProduct(product))
                 .collect(Collectors.toList());
 
-        categoryResponse.setProductResponseList(responseList);
+        categoryResponse.setProducts(responseList);
         return categoryResponse;
     }
 }

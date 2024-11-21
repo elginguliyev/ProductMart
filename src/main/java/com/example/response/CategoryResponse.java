@@ -13,6 +13,6 @@ import java.util.List;
 public class CategoryResponse {
     private Long id;
     private String name;
-    List<ProductResponse> productResponseList;
+    List<ProductResponse> products;
 
 }

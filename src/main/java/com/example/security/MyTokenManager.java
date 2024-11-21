@@ -12,7 +12,7 @@ import java.util.Date;
 public class MyTokenManager {
 
     private final String JWT_SECRET = "your_secret_key";
-    private final long JWT_EXPIRATION = 86400; // 1 day
+    private final long JWT_EXPIRATION = 86400000; // 1 day
 
     public String generateToken(String username) {
         return Jwts.builder()

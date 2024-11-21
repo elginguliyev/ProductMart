@@ -25,7 +25,7 @@ public class ProductToProductResponse {
         productResponse.setImageURLs(imageResponses);
 
         List<CommentResponse> commentResponses = product.getComments().stream()
-                .map(comment -> new CommentResponse(comment.getContent(), comment.getCreatedAt(), comment.getUser().getId()))
+                .map(comment -> new CommentResponse(comment.getId(), comment.getContent(), comment.getCreatedAt(), comment.getUser().getId()))
                 .collect(Collectors.toList());
 
         productResponse.setComments(commentResponses);

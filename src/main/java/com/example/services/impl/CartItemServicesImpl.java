@@ -2,9 +2,11 @@ package com.example.services.impl;
 
 import com.example.entites.Cart;
 import com.example.entites.CartItem;
+import com.example.entites.Product;
 import com.example.entites.User;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
+import com.example.repository.ProductRepository;
 import com.example.repository.UserRepository;
 import com.example.request.CartItemRequest;
 import com.example.response.CartItemResponse;
@@ -30,11 +32,16 @@ public class CartItemServicesImpl implements CartItemServices {
 
     private final UserRepository userRepository;
 
+    private final ProductRepository productRepository;
+
     @Override
     public CartResponse createCartItem(CartItemRequest cartItemRequest, Principal principal) {
 
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Product product = productRepository.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not  found"));
 
         Cart cart = cartRepository.findByUser(user);
 
@@ -46,26 +53,28 @@ public class CartItemServicesImpl implements CartItemServices {
         }
 
         CartItem existingCartItem = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProductId().equals(cartItemRequest.getProductId()))
+                .filter(cartItem -> cartItem.getProduct().getId().equals(cartItemRequest.getProductId()))
                 .findFirst()
                 .orElse(null);
 
         if (existingCartItem != null) {
-            int newQuantity = existingCartItem.getQuantity() + cartItemRequest.getQuantity();
+            Integer newQuantity = existingCartItem.getQuantity() + cartItemRequest.getQuantity();
             existingCartItem.setQuantity(newQuantity);
+            existingCartItem.setTotalPrice(product.getPrice() * newQuantity);
 
-            double newAmount = existingCartItem.getPrice() * cartItemRequest.getQuantity();
+            double newAmount = existingCartItem.getProduct().getPrice() * cartItemRequest.getQuantity();
             cart.setTotalAmount(cart.getTotalAmount() + newAmount);
         } else {
             CartItem cartItem = new CartItem();
-            cartItem.setProductId(cartItemRequest.getProductId());
-            cartItem.setPrice(cartItemRequest.getPrice());
+            double totalPrice = product.getPrice() * cartItemRequest.getQuantity();
+            cartItem.setProduct(product);
+            cartItem.setTotalPrice(totalPrice);
             cartItem.setQuantity(cartItemRequest.getQuantity());
             cartItem.setCart(cart);
 
-            double newAmount = cartItemRequest.getPrice() * cartItemRequest.getQuantity();
+            ;
 
-            cart.setTotalAmount(cart.getTotalAmount() + newAmount);
+            cart.setTotalAmount(cart.getTotalAmount() + totalPrice);
             cart.getCartItems().add(cartItem);
         }
 
@@ -107,6 +116,9 @@ public class CartItemServicesImpl implements CartItemServices {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        Product product = productRepository.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not  found"));
+
         Cart cart = cartRepository.findByUser(user);
 
         CartItem existingCartItem = cart.getCartItems().stream()
@@ -114,8 +126,8 @@ public class CartItemServicesImpl implements CartItemServices {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
-        double newAmount = existingCartItem.getPrice() * cartItemRequest.getQuantity();
-        double currentAmount = existingCartItem.getPrice() * existingCartItem.getQuantity();
+        double newAmount = existingCartItem.getProduct().getPrice() * cartItemRequest.getQuantity();
+        double currentAmount = existingCartItem.getProduct().getPrice() * existingCartItem.getQuantity();
 
         if (existingCartItem != null) {
             existingCartItem.setQuantity(cartItemRequest.getQuantity());
@@ -147,11 +159,13 @@ public class CartItemServicesImpl implements CartItemServices {
                 .filter(cartItem -> cartItem.getId().equals(cartItemId))
                 .findFirst()
                 .orElse(null);
-        double newAmount = exsistingcartItem.getPrice() * exsistingcartItem.getQuantity();
+        double newAmount = exsistingcartItem.getProduct().getPrice() * exsistingcartItem.getQuantity();
         cart.setTotalAmount(cart.getTotalAmount() - newAmount);
 
+
         cart.getCartItems().remove(exsistingcartItem);
-        cartItemRepository.delete(exsistingcartItem);
+        cartItemRepository.deleteById(exsistingcartItem.getId());
+
 
         Cart updateCart = cartRepository.save(cart);
         return CartToCartResponse.convertToCartResp(updateCart);

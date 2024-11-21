@@ -1,5 +1,6 @@
 package com.example.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,14 +22,15 @@ public class CartItem {
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @OneToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private int quantity=0;
 
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "total_price")
+    private Double totalPrice;
 
 
 
