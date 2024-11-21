@@ -45,7 +45,8 @@ public class CommentServicesImpl implements CommentServices {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
 
-        Comment comment = commentRepository.findByIdAndUser(commentId, user);
+        Comment comment = commentRepository.findByIdAndUser(commentId, user)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
 
         comment.setContent(commentRequest.getContent());
         commentRepository.save(comment);
@@ -55,7 +56,8 @@ public class CommentServicesImpl implements CommentServices {
     public void deleteComment(Principal principal, Long commentId) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Comment comment = commentRepository.findByUser(user);
+        Comment comment = commentRepository.findByIdAndUser(commentId, user)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
 
         commentRepository.delete(comment);
     }
