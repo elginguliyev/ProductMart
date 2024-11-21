@@ -15,6 +15,7 @@ import com.example.dto.CartToCartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +31,11 @@ public class CartItemServicesImpl implements CartItemServices {
     private final UserRepository userRepository;
 
     @Override
-    public CartResponse createCartItem(CartItemRequest cartItemRequest, Long userid) {
+    public CartResponse createCartItem(CartItemRequest cartItemRequest, Principal principal) {
 
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        User user = userRepository.findById(userid).orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = cartRepository.findByUser(user);
 
         if (cart == null) {
@@ -44,7 +46,7 @@ public class CartItemServicesImpl implements CartItemServices {
         }
 
         CartItem existingCartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProductId().equals(cartItemRequest.getProductId()))
+                .filter(cartItem -> cartItem.getProductId().equals(cartItemRequest.getProductId()))
                 .findFirst()
                 .orElse(null);
 
@@ -66,14 +68,17 @@ public class CartItemServicesImpl implements CartItemServices {
             cart.setTotalAmount(cart.getTotalAmount() + newAmount);
             cart.getCartItems().add(cartItem);
         }
-        Cart cart1 = cartRepository.save(cart);
-        return CartToCartResponse.convertToCartResp(cart1);
+
+        Cart createdCart = cartRepository.save(cart);
+        return CartToCartResponse.convertToCartResp(createdCart);
 
     }
 
     @Override
-    public CartItemResponse getCartItemById(Long userId, Long cartItemId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public CartItemResponse getCartItemById(Principal principal, Long cartItemId) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Cart cart = cartRepository.findByUser(user);
 
         CartItem item = cart.getCartItems().stream()
@@ -85,8 +90,10 @@ public class CartItemServicesImpl implements CartItemServices {
     }
 
     @Override
-    public List<CartItemResponse> getAllCartItems(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public List<CartItemResponse> getAllCartItems(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Cart cart = cartRepository.findByUser(user);
 
         List<CartItem> cartItemList = cart.getCartItems();
@@ -96,12 +103,14 @@ public class CartItemServicesImpl implements CartItemServices {
     }
 
     @Override
-    public CartResponse updateCartItem(Long userId, Long cartItemId, CartItemRequest cartItemRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public CartResponse updateCartItem(Principal principal, Long cartItemId, CartItemRequest cartItemRequest) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Cart cart = cartRepository.findByUser(user);
 
         CartItem existingCartItem = cart.getCartItems().stream()
-                .filter(item -> item.getId().equals(cartItemId))
+                .filter(cartItem -> cartItem.getId().equals(cartItemId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
@@ -124,8 +133,9 @@ public class CartItemServicesImpl implements CartItemServices {
     }
 
     @Override
-    public CartResponse deleteCartItem(Long useriId, Long cartItemId) {
-        User user = userRepository.findById(useriId).orElseThrow(() -> new RuntimeException("User not found"));
+    public CartResponse deleteCartItem(Principal principal, Long cartItemId) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Cart cart = cartRepository.findByUser(user);
         if (cart == null) {
@@ -141,7 +151,7 @@ public class CartItemServicesImpl implements CartItemServices {
         cart.setTotalAmount(cart.getTotalAmount() - newAmount);
 
         cart.getCartItems().remove(exsistingcartItem);
-        cartItemRepository.deleteById(cartItemId);
+        cartItemRepository.delete(exsistingcartItem);
 
         Cart updateCart = cartRepository.save(cart);
         return CartToCartResponse.convertToCartResp(updateCart);
