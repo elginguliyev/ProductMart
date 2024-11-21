@@ -46,10 +46,8 @@ public class AddressServicesImpl implements AddressService {
         if (address.getUser().equals(user)) {
             throw new RuntimeException("You can only delete your own address");
         }
-         return AddressToAddressResponse.toDTO(address);
+        return AddressToAddressResponse.toDTO(address);
     }
-
-
 
 
     @Override
@@ -69,8 +67,18 @@ public class AddressServicesImpl implements AddressService {
     }
 
     @Override
-    public void updateAddress(AddressRequest addressRequest) {
+    public void updateAddress(Principal principal, Long id, AddressRequest addressRequest) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        Address address = addressRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new RuntimeException("Address not  found"));
+
+        address.setCity(addressRequest.getCity());
+        address.setStreet(addressRequest.getStreet());
+        address.setPhoneNumber(addressRequest.getPhoneNumber());
+
+        addressRepository.save(address);
     }
 
     @Override

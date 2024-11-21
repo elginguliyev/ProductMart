@@ -45,4 +45,15 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(addressResponse);
     }
 
+    @PatchMapping(path = "address/{id}")
+    public ResponseEntity<String> updateAddress(Principal principal,
+                                                @PathVariable Long id,
+                                                @RequestBody AddressRequest addressRequest) {
+
+        addressService.updateAddress(principal, id, addressRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Address update successfully");
+
+    }
+
 }
