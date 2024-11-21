@@ -8,9 +8,9 @@ import java.security.Principal;
 @Service
 public interface CommentServices {
 
-    void addComment(Principal principal, CommentRequest commentRequest);
+    void addComment(Principal principal, Long productId, CommentRequest commentRequest);
 
-    void updateComment(Principal principal, Long commentId, CommentRequest commentRequest);
+    void updateComment(Principal principal, Long productId,Long commentId, CommentRequest commentRequest);
 
-    void deleteComment(Principal principal, Long commentId);
+    void deleteComment(Principal principal, Long productId, Long commentId);
 }

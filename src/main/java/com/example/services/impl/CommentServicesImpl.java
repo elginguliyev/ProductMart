@@ -24,12 +24,12 @@ public class CommentServicesImpl implements CommentServices {
     private final ProductRepository productRepository;
 
     @Override
-    public void addComment(Principal principal, CommentRequest commentRequest) {
+    public void addComment(Principal principal, Long productId, CommentRequest commentRequest) {
 
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Product product = productRepository.findById(commentRequest.getProductId())
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Comment comment = new Comment();
@@ -40,7 +40,7 @@ public class CommentServicesImpl implements CommentServices {
     }
 
     @Override
-    public void updateComment(Principal principal, Long commentId, CommentRequest commentRequest) {
+    public void updateComment(Principal principal, Long productId,  Long commentId, CommentRequest commentRequest) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -53,11 +53,16 @@ public class CommentServicesImpl implements CommentServices {
     }
 
     @Override
-    public void deleteComment(Principal principal, Long commentId) {
+    public void deleteComment(Principal principal, Long productId, Long commentId) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         Comment comment = commentRepository.findByIdAndUser(commentId, user)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        if (!comment.getProduct().getId().equals(productId)){
+            throw  new RuntimeException("Comment does not belong to the given product");
+        }
 
         commentRepository.delete(comment);
     }
