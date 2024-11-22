@@ -1,6 +1,8 @@
 package com.example.controller;
 
 
+import com.example.exception.MyUserAndPasswordInCorrect;
+import com.example.request.LoginRequest;
 import com.example.request.UserRequest;
 import com.example.entites.User;
 import com.example.exception.MyException;
@@ -39,9 +41,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<List<UserResponse>> register(@Valid @RequestBody UserRequest userRequest, BindingResult br) {
-        if (br.hasErrors()){
-            throw new MyException("Məlumatlar boş ola  bilməz !", br);
+    public ResponseEntity<List<UserResponse>> register(@Valid
+                                                       @RequestBody UserRequest userRequest,
+                                                       BindingResult br) {
+        if (br.hasErrors()) {
+            throw new MyException("Məlumatlar düzgün daxil edilməyib", br);
         }
         userService.createUser(userRequest);
         List<UserResponse> responseList = userService.getAllUsers();
@@ -49,9 +53,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<String> login(@Valid
+                                        @RequestBody LoginRequest loginRequest,
+                                        BindingResult br)  {
+        if (br.hasErrors()) {
+            throw new MyUserAndPasswordInCorrect("Məlumatlar düzgün daxil edilməyib", br);
+        }
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                        loginRequest.getPassword())
         );
         String username = authentication.getName();
         String token = jwtTokenProvider.generateToken(username);

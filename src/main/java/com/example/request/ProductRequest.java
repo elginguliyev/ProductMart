@@ -1,5 +1,6 @@
 package com.example.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,16 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductRequest {
 
+    @NotBlank(message = "Məhsulun adini daxil edin")
     private String name;
-
+    @NotBlank(message = "Məhsul haqqında məlumat daxil edin")
     private String description;
-
+    @NotBlank(message = "Məhsulun qiymətini  daxil edin")
     private Double price;
-
     private Integer quantity;
-
+    @NotBlank(message = "Kateqoriya seçin")
     private Long categoryId;
-
+    @NotBlank(message = "Şəhər/Rayon daxil seçin")
     private String location;
 
     private List<MultipartFile> files;

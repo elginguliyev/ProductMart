@@ -46,15 +46,14 @@ public class ProductController {
     @DeleteMapping("product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productsServices.deleteProduct(id);
-        return ResponseEntity.ok("Məhsul uğurla silindiş");
+        return ResponseEntity.ok("Məhsul uğurla silindi");
     }
 
     @PostMapping(path = "add-product")
     public ResponseEntity<String> addProduct(@ModelAttribute ProductRequest productRequest) throws IOException {
-        System.out.println(productRequest.getName());
 
         productsServices.createProduct(productRequest);
-        return ResponseEntity.ok("Məhsul uğurla əlavə edildiş");
+        return ResponseEntity.ok("Məhsul uğurla əlavə edildi");
     }
 
     @GetMapping
@@ -69,10 +68,10 @@ public class ProductController {
                                                                           @RequestParam(name = "category" , required = false) String categoryName) {
 
         if (location == null) {
-            location = "";  // Eğer location boşsa, boş bir string ile değiştir.
+            location = "";
         }
         if (categoryName == null) {
-            categoryName = "";  // Eğer category boşsa, boş bir string ile değiştir.
+            categoryName = "";
         }
         List<ProductResponse> productResponses = productsServices.getByNameAndLocationAndCategory(name, location, categoryName);
         return ResponseEntity.ok(productResponses);

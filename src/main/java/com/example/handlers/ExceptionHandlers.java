@@ -1,6 +1,7 @@
 package com.example.handlers;
 
 import com.example.exception.MyException;
+import com.example.exception.MyUserAndPasswordInCorrect;
 import com.example.response.CustomErrorMesage;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,8 +15,7 @@ import java.util.stream.Collectors;
 public class ExceptionHandlers {
 
 
-
-    @ExceptionHandler
+    @ExceptionHandler(MyException.class)
     public ErrorResponse myHandlerExc(MyException myException) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setMessage(myException.getMessage());
@@ -23,6 +23,18 @@ public class ExceptionHandlers {
                 .map(fieldError -> new CustomErrorMesage(fieldError.getField(), fieldError.getDefaultMessage()))
                 .collect(Collectors.toList());
         errorResponse.setValidations(customErrorMesages);
+        return errorResponse;
+    }
+
+    @ExceptionHandler(MyUserAndPasswordInCorrect.class)
+    public ErrorResponse myUserAndPassword(MyUserAndPasswordInCorrect myUserAndPasswordInCorrect) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(myUserAndPasswordInCorrect.getMessage());
+        List<CustomErrorMesage> customErrorMesages = myUserAndPasswordInCorrect.getBr().getFieldErrors().stream()
+                .map(fieldError -> new CustomErrorMesage(fieldError.getField(), fieldError.getDefaultMessage()))
+                .collect(Collectors.toList());
+        errorResponse.setValidations(customErrorMesages);
+
         return errorResponse;
     }
 

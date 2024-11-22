@@ -1,5 +1,6 @@
 package com.example.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryRequest {
 
+    @NotBlank(message = "Zəhmət olmasa bir katagoriya seçin")
     private String name;
 
 }

@@ -31,7 +31,6 @@ public class TokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(request);
 
-        // Token varsa və keçərlidirsə yoxla
         if (token != null && jwtTokenProvider.validateToken(token) && !jwtTokenProvider.isExpairedToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -44,7 +43,6 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // Filter etməməli olan endpoint-ləri istisna et
         String path = request.getServletPath();
         return path.equals("/login") || path.equals("/register") || path.startsWith("/auth/");
     }
