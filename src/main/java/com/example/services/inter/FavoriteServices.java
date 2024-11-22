@@ -12,5 +12,7 @@ public interface FavoriteServices {
 
     FavoriteResponse addFavorite(Principal principal, Long productId);
 
-    void deleteFavorite(Principal principal, Long favoriteId, Long productId);
+    void deleteFavorite(Principal principal, Long favoriteId);
+
+    List<FavoriteResponse> getAllFavorite(Principal principal);
 }

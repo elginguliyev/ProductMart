@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -44,14 +45,23 @@ public class FavoriteServicesImpl implements FavoriteServices {
     }
 
     @Override
-    public void deleteFavorite(Principal principal, Long favoriteId, Long productId) {
+    public void deleteFavorite(Principal principal, Long favoriteId) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not  found"));
 
-        Favorite favorite = favoriteRepository.findByUser(user);
-        if (!favorite.getId().equals(favoriteId)){
-            throw new RuntimeException("");
-        }
-         favoriteRepository.delete(favorite);
+        Favorite favorite = favoriteRepository.findByIdAndUser(favoriteId, user);
+
+        favoriteRepository.delete(favorite);
+    }
+
+    @Override
+    public List<FavoriteResponse> getAllFavorite(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not  found"));
+
+        List<Favorite> favorites = favoriteRepository.findAllAndUser(user);
+        return favorites.stream()
+                .map(favorite -> FavoriteToFavoriteResp.toResponse(favorite))
+                .collect(Collectors.toList());
     }
 }
