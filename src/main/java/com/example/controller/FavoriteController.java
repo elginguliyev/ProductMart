@@ -18,26 +18,20 @@ public class FavoriteController {
 
     private final FavoriteServices favoriteServices;
 
-
-
-
-    @PostMapping
+    @PostMapping(path = "add-favorite")
     public ResponseEntity<FavoriteResponse> addFavorite(Principal principal,
-                                                        @PathVariable Long productId) {
+                                                        @RequestParam Long productId) {
         FavoriteResponse favoriteResponse = favoriteServices.addFavorite(principal, productId);
         return ResponseEntity.status(HttpStatus.OK).body(favoriteResponse);
     }
 
 
-
-
-    @DeleteMapping(path = "favorite/{productId}")
+    @DeleteMapping(path = "favorite")
     public ResponseEntity<Void> deleteFavorite(Principal principal,
-                                               @PathVariable Long productId) {
-        favoriteServices.deleteFavorite(principal, productId);
+                                               @RequestParam Long favoriteId) {
+        favoriteServices.deleteFavorite(principal, favoriteId);
         return ResponseEntity.noContent().build();
     }
-
 
 
     @GetMapping(path = "favorites")

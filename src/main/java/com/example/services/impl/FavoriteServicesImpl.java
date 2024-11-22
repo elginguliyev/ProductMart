@@ -59,7 +59,7 @@ public class FavoriteServicesImpl implements FavoriteServices {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not  found"));
 
-        List<Favorite> favorites = favoriteRepository.findAllAndUser(user);
+        List<Favorite> favorites = favoriteRepository.findAllByUser(user);
         return favorites.stream()
                 .map(favorite -> FavoriteToFavoriteResp.toResponse(favorite))
                 .collect(Collectors.toList());
