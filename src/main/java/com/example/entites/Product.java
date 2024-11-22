@@ -64,5 +64,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private Favorite favorite;
 
 }
