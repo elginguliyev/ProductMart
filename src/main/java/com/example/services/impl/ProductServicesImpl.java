@@ -1,5 +1,6 @@
 package com.example.services.impl;
 
+import com.example.exception.NotFoundException;
 import com.example.request.ProductRequest;
 import com.example.entites.Category;
 import com.example.entites.Image;
@@ -33,7 +34,7 @@ public class ProductServicesImpl implements ProductsServices {
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) throws IOException {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Kataqoriya tapılmadı"));
 
         Product product = new Product();
         product.setName(productRequest.getName());
@@ -62,7 +63,7 @@ public class ProductServicesImpl implements ProductsServices {
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
 
         ProductResponse productResponse = ProductToProductResponse.convertToProduct(product);
         return productResponse;
@@ -79,31 +80,20 @@ public class ProductServicesImpl implements ProductsServices {
     @Override
     public void updateProduct(Long id, ProductRequest productRequest) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
 
 
-        if (productRequest.getName() != null) {
             product.setName(productRequest.getName());
-        }
-        if (productRequest.getDescription() != null) {
             product.setDescription(productRequest.getDescription());
-        }
-        if (productRequest.getPrice() != null) {
             product.setPrice(productRequest.getPrice());
-        } else if (product.getPrice() == null) {
-            product.setPrice(0.0);
-        }
-        if (productRequest.getQuantity() != null) {
+
             product.setQuantity(productRequest.getQuantity());
-        }
-        if (productRequest.getLocation() != null) {
             product.setLocation(productRequest.getLocation());
-        }
-        if (productRequest.getCategoryId() != null) {
             Category category = categoryRepository.findById(productRequest.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category with ID " + productRequest.getCategoryId() + " not found"));
+                    .orElseThrow(() -> new NotFoundException("Kataqoriya tapılmadı"));
             product.setCategory(category);
-        }
+
+
         productRepository.save(product);
     }
 

@@ -4,6 +4,7 @@ import com.example.entites.Cart;
 import com.example.entites.CartItem;
 import com.example.entites.Product;
 import com.example.entites.User;
+import com.example.exception.NotFoundException;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
 import com.example.repository.ProductRepository;
@@ -38,10 +39,10 @@ public class CartItemServicesImpl implements CartItemServices {
     public CartResponse createCartItem(CartItemRequest cartItemRequest, Principal principal) {
 
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not  found"));
+                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
 
         Cart cart = cartRepository.findByUser(user);
 
@@ -86,14 +87,14 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public CartItemResponse getCartItemById(Principal principal, Long cartItemId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         Cart cart = cartRepository.findByUser(user);
 
         CartItem item = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getId().equals(cartItemId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+                .orElseThrow(() -> new NotFoundException("Səbət məhsulu tapılmadı"));
 
         return CartItemToCartItemResponse.convertToCartItemResp(item);
     }
@@ -101,7 +102,7 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public List<CartItemResponse> getAllCartItems(Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         Cart cart = cartRepository.findByUser(user);
 
@@ -114,17 +115,15 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public CartResponse updateCartItem(Principal principal, Long cartItemId, CartItemRequest cartItemRequest) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
-        Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not  found"));
 
         Cart cart = cartRepository.findByUser(user);
 
         CartItem existingCartItem = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getId().equals(cartItemId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+                .orElseThrow(() -> new NotFoundException("Səbət məhsulu tapılmadı"));
 
         double newAmount = existingCartItem.getProduct().getPrice() * cartItemRequest.getQuantity();
         double currentAmount = existingCartItem.getProduct().getPrice() * existingCartItem.getQuantity();
@@ -147,11 +146,11 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public CartResponse deleteCartItem(Principal principal, Long cartItemId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         Cart cart = cartRepository.findByUser(user);
         if (cart == null) {
-            throw new RuntimeException("cart not found");
+            throw new NotFoundException("Səbət tapılmadı");
         }
 
 

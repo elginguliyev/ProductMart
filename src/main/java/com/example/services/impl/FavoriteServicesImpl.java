@@ -4,6 +4,7 @@ import com.example.dto.FavoriteToFavoriteResp;
 import com.example.entites.Favorite;
 import com.example.entites.Product;
 import com.example.entites.User;
+import com.example.exception.NotFoundException;
 import com.example.repository.FavoriteRepository;
 import com.example.repository.ProductRepository;
 import com.example.repository.UserRepository;
@@ -31,10 +32,10 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Override
     public FavoriteResponse addFavorite(Principal principal, Long productId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not  found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product  not  found"));
+                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
         Favorite favorite = new Favorite();
         favorite.setUser(user);
         favorite.setProduct(product);
@@ -47,7 +48,7 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Override
     public void deleteFavorite(Principal principal, Long favoriteId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not  found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         Favorite favorite = favoriteRepository.findByIdAndUser(favoriteId, user);
 
@@ -57,7 +58,7 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Override
     public List<FavoriteResponse> getAllFavorite(Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not  found"));
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
 
         List<Favorite> favorites = favoriteRepository.findAllByUser(user);
         return favorites.stream()

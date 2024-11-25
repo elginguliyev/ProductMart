@@ -1,11 +1,10 @@
 package com.example.controller;
 
 
-import com.example.exception.MyUserAndPasswordInCorrect;
+import com.example.exception.UserAndPasswordException;
 import com.example.request.LoginRequest;
 import com.example.request.UserRequest;
-import com.example.entites.User;
-import com.example.exception.MyException;
+import com.example.exception.UserRequestException;
 import com.example.response.UserResponse;
 import com.example.security.MyTokenManager;
 import com.example.services.inter.UserService;
@@ -45,7 +44,7 @@ public class AuthController {
                                                        @RequestBody UserRequest userRequest,
                                                        BindingResult br) {
         if (br.hasErrors()) {
-            throw new MyException("Məlumatlar düzgün daxil edilməyib", br);
+            throw new UserRequestException("Məlumatlar düzgün daxil edilməyib", br);
         }
         userService.createUser(userRequest);
         List<UserResponse> responseList = userService.getAllUsers();
@@ -55,9 +54,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid
                                         @RequestBody LoginRequest loginRequest,
-                                        BindingResult br)  {
+                                        BindingResult br) {
         if (br.hasErrors()) {
-            throw new MyUserAndPasswordInCorrect("Məlumatlar düzgün daxil edilməyib", br);
+            throw new UserAndPasswordException("Məlumatlar düzgün daxil edilməyib", br);
         }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),

@@ -1,5 +1,7 @@
 package com.example.services.impl;
 
+import com.example.exception.ExistisEmailException;
+import com.example.exception.NotFoundException;
 import com.example.request.UserRequest;
 import com.example.entites.Role;
 import com.example.entites.User;
@@ -32,7 +34,7 @@ public class UserServicesImpl implements UserService {
     public User createUser(UserRequest userRequest) {
 
         if (userRepository.existsByEmail(userRequest.getEmail())) {
-            throw new RuntimeException("User with email " + userRequest.getEmail() + " already exists");
+            throw new ExistisEmailException("User with email " + userRequest.getEmail() + " already exists");
         }
         User user = new User();
 
@@ -49,7 +51,7 @@ public class UserServicesImpl implements UserService {
     @Override
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("Istifadəçi tapılmadı"));
 
         UserResponse userResponse = UserToUserResponse.convertUserDto(user);
         return userResponse;
@@ -67,19 +69,14 @@ public class UserServicesImpl implements UserService {
 
     @Override
     public void updateUser(Long id, UserRequest userRequest) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not Found"));
-        if (userRequest.getUsername() != null) {
-            user.setUsername(userRequest.getUsername());
-        }
-        if (userRequest.getName() != null) {
-            user.setName(userRequest.getName());
-        }
-        if (userRequest.getSurname() != null) {
-            user.setSurname(userRequest.getSurname());
-        }
-        if (userRequest.getEmail() != null) {
-            user.setEmail(userRequest.getEmail());
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Istifadəçi tapılmadı"));
+
+        user.setUsername(userRequest.getUsername());
+        user.setName(userRequest.getName());
+        user.setSurname(userRequest.getSurname());
+        user.setEmail(userRequest.getEmail());
+
         userRepository.save(user);
 
     }

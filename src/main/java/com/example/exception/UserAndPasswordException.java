@@ -4,13 +4,13 @@ import lombok.Data;
 import org.springframework.validation.BindingResult;
 
 @Data
-public class MyException extends RuntimeException {
+public class UserAndPasswordException extends RuntimeException {
 
     private BindingResult br;
 
-
-    public MyException(String message, BindingResult br) {
+    public UserAndPasswordException(String message, BindingResult br) {
         super(message);
         this.br = br;
     }
+
 }

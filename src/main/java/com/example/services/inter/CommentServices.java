@@ -10,7 +10,7 @@ public interface CommentServices {
 
     void addComment(Principal principal, Long productId, CommentRequest commentRequest);
 
-    void updateComment(Principal principal, Long productId,Long commentId, CommentRequest commentRequest);
+    void updateComment(Principal principal,Long commentId, CommentRequest commentRequest);
 
-    void deleteComment(Principal principal, Long productId, Long commentId);
+    void deleteComment(Principal principal,  Long commentId);
 }

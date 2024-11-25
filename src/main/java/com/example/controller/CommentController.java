@@ -24,20 +24,18 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Comment add successfully");
     }
 
-    @PutMapping(path = "product/{producId}/comment_update")
+    @PutMapping(path = "comment")
     public ResponseEntity<String> updateComment(Principal principal,
-                                                @PathVariable Long productId,
                                                 @PathVariable Long commentId,
                                                 @RequestBody CommentRequest commentRequest) {
-        commentServices.updateComment(principal, productId, commentId, commentRequest);
+        commentServices.updateComment(principal, commentId, commentRequest);
         return ResponseEntity.status(HttpStatus.OK).body("Comment add successfully");
     }
 
-    @DeleteMapping(path = "product/{producId}/comment_delete")
+    @DeleteMapping(path = "comment")
     public ResponseEntity<String> deleteComment(Principal principal,
-                                                @PathVariable Long producId,
                                                 @RequestParam Long commentId) {
-        commentServices.deleteComment(principal, producId, commentId);
+        commentServices.deleteComment(principal,  commentId);
         return ResponseEntity.status(HttpStatus.OK).body("Comment add successfully");
     }
 
