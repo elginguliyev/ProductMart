@@ -45,8 +45,11 @@ public class Product {
     @Column(name = "location")
     private String location;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product" )
     private CartItem cartItem;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderItem>  orderItems=new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
