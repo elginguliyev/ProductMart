@@ -27,4 +27,18 @@ public class Order {
     private LocalDateTime orderDate;
 
     private OrdeStatus status;
+
+    private double totalAmount;
+
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.orderDate = LocalDateTime.of(
+                now.getYear(),
+                now.getMonth(),
+                now.getDayOfMonth(),
+                now.getHour(),
+                now.getMinute()
+        );
+    }
 }
