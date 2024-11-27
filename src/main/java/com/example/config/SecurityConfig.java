@@ -42,11 +42,15 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(  "/auth/**", "/api/**" ).permitAll()
+                                .requestMatchers("/h2-console/**").permitAll()
 
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .headers(headers ->
+                        headers.frameOptions().disable()  // H2 konsolunun iframe içində işləməsinə icazə verir
                 )
                 .addFilterBefore(new TokenFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 

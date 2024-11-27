@@ -12,10 +12,13 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping(path = "/api/")
-@RequiredArgsConstructor
 public class OrderController {
 
     private final OrderServices orderServices;
+
+    public OrderController(OrderServices orderServices) {
+        this.orderServices = orderServices;
+    }
 
     @PostMapping(path = "add-order")
     public ResponseEntity<Long> createOrder(Principal principal) {

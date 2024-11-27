@@ -59,25 +59,21 @@ public class CartItemServicesImpl implements CartItemServices {
                 .orElse(null);
 
         if (existingCartItem != null) {
-            Integer newQuantity = existingCartItem.getQuantity() + cartItemRequest.getQuantity();
-            existingCartItem.setQuantity(newQuantity);
-            existingCartItem.setTotalPrice(product.getPrice() * newQuantity);
-
-            double newAmount = existingCartItem.getProduct().getPrice() * cartItemRequest.getQuantity();
-            cart.setTotalAmount(cart.getTotalAmount() + newAmount);
-        } else {
-            CartItem cartItem = new CartItem();
-            double totalPrice = product.getPrice() * cartItemRequest.getQuantity();
-            cartItem.setProduct(product);
-            cartItem.setTotalPrice(totalPrice);
-            cartItem.setQuantity(cartItemRequest.getQuantity());
-            cartItem.setCart(cart);
-
-            ;
-
-            cart.setTotalAmount(cart.getTotalAmount() + totalPrice);
-            cart.getCartItems().add(cartItem);
+            throw new NotFoundException("Məhsul səbətə əlave edilib artıq");
         }
+
+
+        CartItem cartItem = new CartItem();
+        double totalPrice = product.getPrice();
+        cartItem.setProduct(product);
+        cartItem.setTotalPrice(totalPrice);
+        cartItem.setQuantity(1);
+        cartItem.setCart(cart);
+
+
+        cart.setTotalAmount(cart.getTotalAmount() + totalPrice);
+        cart.getCartItems().add(cartItem);
+
 
         Cart createdCart = cartRepository.save(cart);
         return CartToCartResponse.convertToCartResp(createdCart);
@@ -130,6 +126,7 @@ public class CartItemServicesImpl implements CartItemServices {
 
         if (existingCartItem != null) {
             existingCartItem.setQuantity(cartItemRequest.getQuantity());
+            existingCartItem.setTotalPrice(newAmount);
         }
 
         if (cartItemRequest.getQuantity() > existingCartItem.getQuantity()) {
