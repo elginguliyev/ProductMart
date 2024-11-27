@@ -24,7 +24,7 @@ public class OrderServicesImpl implements OrderServices {
 
 
     @Override
-    public OrderResponse createOrder(Principal principal) {
+    public Long createOrder(Principal principal) {
 
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new NotFoundException("Istidadəçi tapılmadı"));
@@ -36,22 +36,22 @@ public class OrderServicesImpl implements OrderServices {
         order.setStatus(OrdeStatus.GOZLEMEDE);
         order.setTotalAmount(cart.getTotalAmount());
 
-        List<OrderItem> orderItemResponses = new ArrayList<>();
+        List<OrderItem> orderItemList = new ArrayList<>();
 
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
-            orderItemResponses.add(orderItem);
+            orderItemList.add(orderItem);
         }
-        order.setOrderItemList(orderItemResponses);
+        order.setOrderItemList(orderItemList);
 
         orderRepository.save(order);
 
         cart.getCartItems().clear();
         cartRepository.save(cart);
-        return null;
+        return order.getId();
 
     }
 }
