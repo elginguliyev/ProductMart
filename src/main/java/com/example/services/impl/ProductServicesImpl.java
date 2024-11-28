@@ -1,6 +1,6 @@
 package com.example.services.impl;
 
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.request.ProductRequest;
 import com.example.entites.Category;
 import com.example.entites.Image;
@@ -34,7 +34,7 @@ public class ProductServicesImpl implements ProductsServices {
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) throws IOException {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Kataqoriya tapılmadı"));
+                .orElseThrow(() -> new MyException("Kataqoriya tapılmadı", null));
 
         Product product = new Product();
         product.setName(productRequest.getName());
@@ -63,7 +63,7 @@ public class ProductServicesImpl implements ProductsServices {
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
+                .orElseThrow(() -> new MyException("Məhsul tapılmadı", null));
 
         ProductResponse productResponse = ProductToProductResponse.convertToProduct(product);
         return productResponse;
@@ -80,7 +80,7 @@ public class ProductServicesImpl implements ProductsServices {
     @Override
     public void updateProduct(Long id, ProductRequest productRequest) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
+                .orElseThrow(() -> new MyException("Məhsul tapılmadı", null));
 
 
             product.setName(productRequest.getName());
@@ -90,7 +90,7 @@ public class ProductServicesImpl implements ProductsServices {
             product.setQuantity(productRequest.getQuantity());
             product.setLocation(productRequest.getLocation());
             Category category = categoryRepository.findById(productRequest.getCategoryId())
-                    .orElseThrow(() -> new NotFoundException("Kataqoriya tapılmadı"));
+                    .orElseThrow(() -> new MyException("Kataqoriya tapılmadı", null));
             product.setCategory(category);
 
 

@@ -1,8 +1,7 @@
 package com.example.handlers;
 
 import com.example.exception.ExistisEmailException;
-import com.example.exception.NotFoundException;
-import com.example.exception.UserRequestException;
+import com.example.exception.MyException;
 import com.example.exception.UserAndPasswordException;
 import com.example.response.CustomErrorMesage;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,14 +16,16 @@ import java.util.stream.Collectors;
 public class ExceptionHandlers {
 
 
-    @ExceptionHandler(UserRequestException.class)
-    public ErrorResponse myHandlerExc(UserRequestException userRequestException) {
+    @ExceptionHandler(MyException.class)
+    public ErrorResponse myHandlerExc(MyException exception) {
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(userRequestException.getMessage());
-        List<CustomErrorMesage> customErrorMesages = userRequestException.getBr().getFieldErrors().stream()
-                .map(fieldError -> new CustomErrorMesage(fieldError.getField(), fieldError.getDefaultMessage()))
-                .collect(Collectors.toList());
-        errorResponse.setValidations(customErrorMesages);
+        errorResponse.setMessage(exception.getMessage());
+        if (exception.getBr()!=null){
+            List<CustomErrorMesage> customErrorMesages = exception.getBr().getFieldErrors().stream()
+                    .map(fieldError -> new CustomErrorMesage(fieldError.getField(), fieldError.getDefaultMessage()))
+                    .collect(Collectors.toList());
+            errorResponse.setValidations(customErrorMesages);
+        }
         return errorResponse;
     }
 
@@ -47,11 +48,5 @@ public class ExceptionHandlers {
         return errorResponse;
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ErrorResponse handleUserNotFound(NotFoundException exception) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(exception.getMessage());
-        return errorResponse;
-    }
 
 }

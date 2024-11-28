@@ -4,7 +4,6 @@ package com.example.controller;
 import com.example.exception.UserAndPasswordException;
 import com.example.request.LoginRequest;
 import com.example.request.UserRequest;
-import com.example.exception.UserRequestException;
 import com.example.response.UserResponse;
 import com.example.security.MyTokenManager;
 import com.example.services.inter.UserService;

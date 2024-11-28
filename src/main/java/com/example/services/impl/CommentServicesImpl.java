@@ -3,7 +3,7 @@ package com.example.services.impl;
 import com.example.entites.Comment;
 import com.example.entites.Product;
 import com.example.entites.User;
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.repository.CommentRepository;
 import com.example.repository.ProductRepository;
 import com.example.repository.UserRepository;
@@ -28,10 +28,10 @@ public class CommentServicesImpl implements CommentServices {
     public void addComment(Principal principal, Long productId, CommentRequest commentRequest) {
 
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı", null));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
+                .orElseThrow(() -> new MyException("Məhsul tapılmadı", null));
 
         Comment comment = new Comment();
         comment.setContent(commentRequest.getContent());
@@ -43,11 +43,11 @@ public class CommentServicesImpl implements CommentServices {
     @Override
     public void updateComment(Principal principal,   Long commentId, CommentRequest commentRequest) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
 
         Comment comment = commentRepository.findByIdAndUser(commentId, user)
-                .orElseThrow(() -> new NotFoundException("Şərh  tapılmadı"));
+                .orElseThrow(() -> new MyException("Şərh  tapılmadı",null));
 
         comment.setContent(commentRequest.getContent());
         commentRepository.save(comment);
@@ -56,10 +56,10 @@ public class CommentServicesImpl implements CommentServices {
     @Override
     public void deleteComment(Principal principal,  Long commentId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
         Comment comment = commentRepository.findByIdAndUser(commentId, user)
-                .orElseThrow(() -> new NotFoundException("Şərh  tapılmadı"));
+                .orElseThrow(() -> new MyException("Şərh  tapılmadı",null));
 
 
         commentRepository.delete(comment);

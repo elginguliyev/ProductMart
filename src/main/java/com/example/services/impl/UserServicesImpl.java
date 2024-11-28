@@ -1,7 +1,7 @@
 package com.example.services.impl;
 
 import com.example.exception.ExistisEmailException;
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.request.UserRequest;
 import com.example.entites.Role;
 import com.example.entites.User;
@@ -51,7 +51,7 @@ public class UserServicesImpl implements UserService {
     @Override
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Istifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("Istifadəçi tapılmadı" ,null));
 
         UserResponse userResponse = UserToUserResponse.convertUserDto(user);
         return userResponse;
@@ -70,7 +70,7 @@ public class UserServicesImpl implements UserService {
     @Override
     public void updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Istifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("Istifadəçi tapılmadı", null));
 
         user.setUsername(userRequest.getUsername());
         user.setName(userRequest.getName());

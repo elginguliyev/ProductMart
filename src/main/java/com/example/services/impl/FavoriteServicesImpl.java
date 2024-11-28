@@ -4,7 +4,7 @@ import com.example.dto.FavoriteToFavoriteResp;
 import com.example.entites.Favorite;
 import com.example.entites.Product;
 import com.example.entites.User;
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.repository.FavoriteRepository;
 import com.example.repository.ProductRepository;
 import com.example.repository.UserRepository;
@@ -32,10 +32,10 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Override
     public FavoriteResponse addFavorite(Principal principal, Long productId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı", null));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
+                .orElseThrow(() -> new MyException("Məhsul tapılmadı", null));
         Favorite favorite = new Favorite();
         favorite.setUser(user);
         favorite.setProduct(product);
@@ -48,7 +48,7 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Override
     public void deleteFavorite(Principal principal, Long favoriteId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı", null));
 
         Favorite favorite = favoriteRepository.findByIdAndUser(favoriteId, user);
 
@@ -58,7 +58,7 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Override
     public List<FavoriteResponse> getAllFavorite(Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı", null));
 
         List<Favorite> favorites = favoriteRepository.findAllByUser(user);
         return favorites.stream()

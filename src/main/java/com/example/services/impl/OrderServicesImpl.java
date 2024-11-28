@@ -1,11 +1,10 @@
 package com.example.services.impl;
 
 import com.example.entites.*;
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.repository.CartRepository;
 import com.example.repository.OrderRepository;
 import com.example.repository.UserRepository;
-import com.example.response.OrderResponse;
 import com.example.services.inter.OrderServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class OrderServicesImpl implements OrderServices {
     public Long createOrder(Principal principal) {
 
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("Istidadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("Istidadəçi tapılmadı", null));
 
         Cart cart = cartRepository.findByUser(user);
 

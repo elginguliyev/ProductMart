@@ -4,7 +4,7 @@ import com.example.entites.Cart;
 import com.example.entites.CartItem;
 import com.example.entites.Product;
 import com.example.entites.User;
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.repository.CartItemRepository;
 import com.example.repository.CartRepository;
 import com.example.repository.ProductRepository;
@@ -39,10 +39,10 @@ public class CartItemServicesImpl implements CartItemServices {
     public CartResponse createCartItem(CartItemRequest cartItemRequest, Principal principal) {
 
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new NotFoundException("Məhsul tapılmadı"));
+                .orElseThrow(() -> new MyException("Məhsul tapılmadı",null));
 
         Cart cart = cartRepository.findByUser(user);
 
@@ -59,7 +59,7 @@ public class CartItemServicesImpl implements CartItemServices {
                 .orElse(null);
 
         if (existingCartItem != null) {
-            throw new NotFoundException("Məhsul səbətə əlave edilib artıq");
+            throw new MyException("Məhsul səbətə əlave edilib artıq",null);
         }
 
 
@@ -83,14 +83,14 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public CartItemResponse getCartItemById(Principal principal, Long cartItemId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
         Cart cart = cartRepository.findByUser(user);
 
         CartItem item = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getId().equals(cartItemId))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Səbət məhsulu tapılmadı"));
+                .orElseThrow(() -> new MyException("Səbət məhsulu tapılmadı",null));
 
         return CartItemToCartItemResponse.convertToCartItemResp(item);
     }
@@ -98,7 +98,7 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public List<CartItemResponse> getAllCartItems(Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
         Cart cart = cartRepository.findByUser(user);
 
@@ -111,7 +111,7 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public CartResponse updateCartItem(Principal principal, Long cartItemId, CartItemRequest cartItemRequest) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
 
         Cart cart = cartRepository.findByUser(user);
@@ -119,7 +119,7 @@ public class CartItemServicesImpl implements CartItemServices {
         CartItem existingCartItem = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getId().equals(cartItemId))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Səbət məhsulu tapılmadı"));
+                .orElseThrow(() -> new MyException("Səbət məhsulu tapılmadı",null));
 
         double newAmount = existingCartItem.getProduct().getPrice() * cartItemRequest.getQuantity();
         double currentAmount = existingCartItem.getProduct().getPrice() * existingCartItem.getQuantity();
@@ -143,11 +143,11 @@ public class CartItemServicesImpl implements CartItemServices {
     @Override
     public CartResponse deleteCartItem(Principal principal, Long cartItemId) {
         User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı"));
+                .orElseThrow(() -> new MyException("İstifadəçi tapılmadı",null));
 
         Cart cart = cartRepository.findByUser(user);
         if (cart == null) {
-            throw new NotFoundException("Səbət tapılmadı");
+            throw new MyException("Səbət tapılmadı",null);
         }
 
 

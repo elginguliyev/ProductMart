@@ -1,6 +1,6 @@
 package com.example.services.impl;
 
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.request.CategoryRequest;
 import com.example.entites.Category;
 import com.example.repository.CategoryRepository;
@@ -34,7 +34,7 @@ public class CategoryServicesImpl implements CategoryServices {
     @Override
     public CategoryResponse getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Kataqoriya tapılmadı"));
+                .orElseThrow(() -> new MyException("Kataqoriya tapılmadı",null));
 
         CategoryResponse categoryResponse = CategoryToCategoryResponse.concertToCategory(category);
         return categoryResponse;
@@ -52,7 +52,7 @@ public class CategoryServicesImpl implements CategoryServices {
     @Override
     public void updateCategory(Long id, CategoryRequest categoryRequest) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Kataqoriya tapılmadı"));
+                .orElseThrow(() -> new MyException("Kataqoriya tapılmadı",null));
         category.setName(categoryRequest.getName());
         categoryRepository.save(category);
     }

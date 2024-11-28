@@ -3,7 +3,7 @@ package com.example.services.impl;
 import com.example.dto.CartToCartResponse;
 import com.example.entites.Cart;
 import com.example.entites.User;
-import com.example.exception.NotFoundException;
+import com.example.exception.MyException;
 import com.example.repository.CartRepository;
 import com.example.repository.UserRepository;
 import com.example.response.CartResponse;
@@ -24,7 +24,7 @@ public class CartServicesImpl implements CartServices {
     @Override
     public CartResponse getCart(Principal principal) {
            User user=  userRepository.findByUsername(principal.getName())
-                   .orElseThrow(() -> new NotFoundException("Istifadəçi tapılmadı"));
+                   .orElseThrow(() -> new MyException("Istifadəçi tapılmadı",null));
 
         Cart cart = cartRepository.findByUser(user);
         CartResponse cartResponse = CartToCartResponse.convertToCartResp(cart);
