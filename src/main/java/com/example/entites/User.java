@@ -1,5 +1,6 @@
 package com.example.entites;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -58,6 +59,7 @@ public class User {
     private List<Order> orders = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @Schema(type = "string", example = "2024-11-28T14:30")
     private LocalDateTime createdAt;
 
     @PrePersist

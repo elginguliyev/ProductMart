@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.request.UserRequest;
 import com.example.response.UserResponse;
 import com.example.services.inter.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +21,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Butun istidafecileri getirir")
     @GetMapping("users")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> responseList = userService.getAllUsers();
         return ResponseEntity.ok(responseList);
     }
-
+    @Operation(summary = "ID gore istifadeci tapir")
     @GetMapping("user{id}")
     public ResponseEntity<UserResponse> getByIdUser(@PathVariable Long id) {
         UserResponse userResponse = userService.getUserById(id);

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 
+import com.example.exception.MyException;
 import com.example.exception.UserAndPasswordException;
 import com.example.request.LoginRequest;
 import com.example.request.UserRequest;
@@ -43,7 +44,7 @@ public class AuthController {
                                                        @RequestBody UserRequest userRequest,
                                                        BindingResult br) {
         if (br.hasErrors()) {
-            throw new UserRequestException("Məlumatlar düzgün daxil edilməyib", br);
+            throw new MyException("Məlumatlar düzgün daxil edilməyib", br);
         }
         userService.createUser(userRequest);
         List<UserResponse> responseList = userService.getAllUsers();

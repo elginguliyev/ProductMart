@@ -32,6 +32,4 @@ public class UserRequest {
 
     @NotBlank(message = "Zəhmət olmasa  parolunuzu daxil edin ")
     private String password;
-
-    private LocalDateTime createdAt;
 }
