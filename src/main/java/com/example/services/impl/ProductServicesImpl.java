@@ -113,19 +113,19 @@ public class ProductServicesImpl implements ProductsServices {
 
     @Override
     public List<ProductResponse> getByNameAndLocationAndCategory(String name, String location, String categoryName) {
-        if (location == null && categoryName == null) {
+        if ((location == null || location.isEmpty()) && (categoryName == null || categoryName.isEmpty())) {
 
             List<Product> productList = productRepository.findByNameContaining(name);
             return productList.stream()
                     .map(product -> ProductToProductResponse.convertToProduct(product))
                     .collect(Collectors.toList());
-        } else if (location == null) {
+        } else if (location == null|| location.isEmpty()) {
 
             List<Product> productList = productRepository.findByNameContainingAndCategory_Name(name, categoryName);
             return productList.stream()
                     .map(product -> ProductToProductResponse.convertToProduct(product))
                     .collect(Collectors.toList());
-        } else if (categoryName == null) {
+        } else if (categoryName == null|| categoryName.isEmpty()) {
 
             List<Product> productList = productRepository.findByNameContainingAndLocation(name, location);
             return productList.stream()

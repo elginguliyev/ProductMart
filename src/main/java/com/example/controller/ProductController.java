@@ -4,6 +4,7 @@ import com.example.request.ProductRequest;
 import com.example.entites.Product;
 import com.example.response.ProductResponse;
 import com.example.services.inter.ProductsServices;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,7 @@ public class ProductController {
         return ResponseEntity.ok("Məhsul uğurla silindi");
     }
 
-    @PostMapping(path = "add-product")
+    @PostMapping(path = "add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> addProduct(@ModelAttribute ProductRequest productRequest) throws IOException {
 
         productsServices.createProduct(productRequest);
