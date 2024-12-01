@@ -2,8 +2,6 @@ package com.example.entites;
 
 public enum Role {
 
-    ADMIN,
-    USER,
-    COSTUMER
-
+    ROLE_ADMIN,
+    ROLE_USER
 }

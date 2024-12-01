@@ -4,18 +4,19 @@ import com.example.request.UserRequest;
 import com.example.entites.User;
 import com.example.response.UserResponse;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
 
-    User createUser(UserRequest userRequest);
+    Long register(UserRequest userRequest);
 
-    UserResponse getUserById(Long id);
+    UserResponse getUser(Principal principal);
 
     List<UserResponse> getAllUsers();
 
-    void updateUser(Long id, UserRequest userRequest);
+    void update(Principal principal, UserRequest userRequest);
 
-    void deleteUser(Long id);
+    void delete(Principal principal);
 }
 

@@ -53,9 +53,11 @@ public class Product {
 
     @PrePersist
     protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
+
 
 
     @ManyToOne
