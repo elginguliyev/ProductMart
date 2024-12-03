@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/")
+@CrossOrigin("*")
 public class CartItemController {
 
     private final CartItemServices cartItemServices;

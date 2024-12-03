@@ -9,14 +9,18 @@ import com.example.repository.UserRepository;
 import com.example.response.UserResponse;
 import com.example.services.inter.UserService;
 import com.example.dto.UserToUserResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServicesImpl implements UserService {
 
 
@@ -25,13 +29,10 @@ public class UserServicesImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServicesImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     @Override
-    public User createUser(UserRequest userRequest) {
+    public Long register(UserRequest userRequest) {
 
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             throw new ExistisEmailException("User with email " + userRequest.getEmail() + " already exists");
@@ -43,15 +44,16 @@ public class UserServicesImpl implements UserService {
         user.setUsername(userRequest.getUsername());
         user.setEmail(userRequest.getEmail());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.ROLE_USER);
         user.setCreatedAt(LocalDateTime.now());
-        return userRepository.save(user);
+         userRepository.save(user);
+         return user.getId();
     }
 
     @Override
-    public UserResponse getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new MyException("Istifadəçi tapılmadı" ,null));
+    public UserResponse getUser(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new MyException("Istifadəçi tapılmadı", null));
 
         UserResponse userResponse = UserToUserResponse.convertUserDto(user);
         return userResponse;
@@ -68,21 +70,30 @@ public class UserServicesImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long id, UserRequest userRequest) {
-        User user = userRepository.findById(id)
+    public void update(Principal principal, UserRequest userRequest) {
+        User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new MyException("Istifadəçi tapılmadı", null));
 
-        user.setUsername(userRequest.getUsername());
-        user.setName(userRequest.getName());
-        user.setSurname(userRequest.getSurname());
-        user.setEmail(userRequest.getEmail());
+        if (userRequest.getUsername() != null) {
+            user.setUsername(userRequest.getUsername());
+        }
+        if (userRequest.getName() != null) {
+            user.setName(userRequest.getName());
+        }
+        if (userRequest.getSurname() != null) {
+            user.setSurname(userRequest.getSurname());
+        }
+        if (userRequest.getEmail() != null) {
+            user.setEmail(userRequest.getEmail());
+        }
 
         userRepository.save(user);
-
     }
 
     @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public void delete(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new MyException("Istifadəçi tapılmadı", null));
+        userRepository.delete(user);
     }
 }

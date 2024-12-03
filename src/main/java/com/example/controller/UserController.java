@@ -11,7 +11,8 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/")
+@RequestMapping(path = "/api/profile")
+@CrossOrigin("*")
 public class UserController {
 
 
@@ -21,35 +22,30 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Butun istidafecileri getirir")
-    @GetMapping("users")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> responseList = userService.getAllUsers();
-        return ResponseEntity.ok(responseList);
-    }
+
+
     @Operation(summary = "ID gore istifadeci tapir")
-    @GetMapping("user{id}")
-    public ResponseEntity<UserResponse> getByIdUser(@PathVariable Long id) {
-        UserResponse userResponse = userService.getUserById(id);
+    @GetMapping
+    public ResponseEntity<UserResponse> getByIdUser(Principal principal) {
+        UserResponse userResponse = userService.getUser(principal);
         return ResponseEntity.ok(userResponse);
     }
 
-    @PatchMapping(path = "user/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
-                                                  @RequestBody UserRequest userRequest) {
-        userService.updateUser(id, userRequest);
-        UserResponse userResponse = getByIdUser(id).getBody();
-        return ResponseEntity.ok(userResponse);
+    @PatchMapping(path = "/update")
+    public ResponseEntity<Void> updateUser(Principal principal,
+                                           @RequestBody UserRequest userRequest) {
+        userService.update(principal, userRequest);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("user/{id}")
-    public ResponseEntity<String> deleteByUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User with ID " + id + " deleted successfully");
+    @DeleteMapping("/remove")
+    public ResponseEntity<String> deleteByUser(Principal principal) {
+        userService.delete(principal);
+        return ResponseEntity.ok("Hesabınız uğurla silindi");
     }
 
 
-    @GetMapping("user-info")
+    @GetMapping("/info")
     public String getUserInfo(Principal principal) {
         String username = principal.getName(); // Hal-hazırda giriş etmiş istifadəçinin adı
         return "Current User: " + username;
