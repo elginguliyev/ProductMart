@@ -12,6 +12,7 @@ public class ProductToProductResponse {
 
     public static ProductResponse convertToProduct(Product product) {
         ProductResponse productResponse = new ProductResponse();
+        productResponse.setId(product.getId());
         productResponse.setName(product.getName());
         productResponse.setDescription(product.getDescription());
         productResponse.setPrice(product.getPrice());
