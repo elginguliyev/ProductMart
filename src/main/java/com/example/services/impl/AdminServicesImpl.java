@@ -9,8 +9,10 @@ import com.example.services.inter.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Service
 public class AdminServicesImpl implements AdminService {
 
     private final UserRepository userRepository;
