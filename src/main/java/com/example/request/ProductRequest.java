@@ -1,5 +1,6 @@
 package com.example.request;
 
+import com.example.entites.Image;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,9 +23,8 @@ public class ProductRequest {
     private Integer quantity;
     @NotBlank(message = "Kateqoriya seçin")
     private Long categoryId;
-    @NotBlank(message = "Şəhər/Rayon daxil seçin")
+    @NotBlank(message = "Şəhər/Rayon daxil edin")
     private String location;
-
-    private List<MultipartFile> files;
+    private List<Image> files;
 
 }

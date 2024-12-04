@@ -46,10 +46,9 @@ public class ProductServicesImpl implements ProductsServices {
 
         List<Image> images = new ArrayList<>();
 
-        for (MultipartFile file : productRequest.getFiles()) {
-            String imageUrl = imageServices.uploadFile(file);
+        for (Image file : productRequest.getFiles()) {
             Image image = new Image();
-            image.setImageURL(imageUrl);
+            image.setImageURL(file.getImageURL());
             image.setProduct(product);
             images.add(image);
         }

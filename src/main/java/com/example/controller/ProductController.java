@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("*")
 public class ProductController {
 
 
@@ -51,8 +51,8 @@ public class ProductController {
         return ResponseEntity.ok("Məhsul uğurla silindi");
     }
 
-    @PostMapping(path = "add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> addProduct(@ModelAttribute ProductRequest productRequest) throws IOException {
+    @PostMapping(path = "add-product")
+    public ResponseEntity<String> addProduct(@RequestBody ProductRequest productRequest) throws IOException {
 
         productsServices.createProduct(productRequest);
         return ResponseEntity.ok("Məhsul uğurla əlavə edildi");

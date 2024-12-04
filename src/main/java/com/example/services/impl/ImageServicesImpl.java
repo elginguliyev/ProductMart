@@ -18,23 +18,30 @@ public class ImageServicesImpl implements ImageServices {
     private final String UPLOAD_DIR = "uploads/";
 
     @Override
-    public String uploadFile(MultipartFile file) throws IOException {
-        InputStream stream = file.getInputStream();
-        UUID uuid = UUID.randomUUID();
-        String uuidStr = uuid.toString();
-        String fileName = file.getOriginalFilename();
-        int lastInt = fileName.lastIndexOf(".");
-        String subName = fileName.substring(0, lastInt);
-        String newFilwName = fileName.replace(subName, uuidStr);
-        Path uploadPath = Paths.get("uploads");
-        Files.createDirectories(uploadPath);
-        Path filePath=uploadPath.resolve(newFilwName);
-        Files.copy(stream,filePath, StandardCopyOption.REPLACE_EXISTING);
+    public String upload(MultipartFile file) throws IOException {
+        String newFileName = null;
+        try {
+            InputStream stream = file.getInputStream();
+
+            UUID uuid = UUID.randomUUID();
+            String uuidStr = uuid.toString();
+            String fileName = file.getOriginalFilename();
+            int lastInt = fileName.lastIndexOf(".");
+            String subName = fileName.substring(0, lastInt);
+            newFileName = fileName.replace(subName, uuidStr);
+            Path uploadPath = Paths.get("uploads");
+            Files.createDirectories(uploadPath);
+            Path filePath = uploadPath.resolve(newFileName);
+            Files.copy(stream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
 
 //        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 //        Path filePath = Paths.get(UPLOAD_DIR + fileName);
 //        Files.createDirectories(filePath.getParent());
 //        Files.write(filePath, file.getBytes());
-        return newFilwName;
+        return newFileName;
     }
 }
