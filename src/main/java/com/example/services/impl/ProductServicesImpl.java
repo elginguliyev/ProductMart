@@ -1,6 +1,7 @@
 package com.example.services.impl;
 
 import com.example.exception.MyException;
+import com.example.request.ImageRequest;
 import com.example.request.ProductRequest;
 import com.example.entites.Category;
 import com.example.entites.Image;
@@ -46,9 +47,9 @@ public class ProductServicesImpl implements ProductsServices {
 
         List<Image> images = new ArrayList<>();
 
-        for (Image file : productRequest.getFiles()) {
+        for (ImageRequest imageReq : productRequest.getFiles()) {
             Image image = new Image();
-            image.setImageURL(file.getImageURL());
+            image.setImageURL(imageReq.getImages());
             image.setProduct(product);
             images.add(image);
         }

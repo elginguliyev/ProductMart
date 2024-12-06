@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 @RestController
 @RequestMapping(path = "/api/")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class FileController {
 
     private final ImageServices imageServices;

@@ -25,6 +25,6 @@ public class ProductRequest {
     private Long categoryId;
     @NotBlank(message = "Şəhər/Rayon daxil edin")
     private String location;
-    private List<Image> files;
+    private List<ImageRequest> files;
 
 }
