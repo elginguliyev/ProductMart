@@ -14,15 +14,15 @@ import java.util.ArrayList;
 public class MyUserDetailsServices implements UserDetailsService {
 
 
-    private final UserRepository userService;
+    private final UserRepository userRepository;
 
     public MyUserDetailsServices(UserRepository userService) {
-        this.userService = userService;
+        this.userRepository = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (user == null) {
             throw new UsernameNotFoundException("User not found");

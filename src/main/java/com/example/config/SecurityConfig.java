@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers(  "/auth/**", "/api/**" ).permitAll()
+                                .requestMatchers("/auth/**", "/api/**" ).permitAll()
                                 .requestMatchers("/auth/admin/**", "/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -55,7 +55,7 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .headers(headers ->
-                        headers.frameOptions().disable()  // H2 konsolunun iframe içində işləməsinə icazə verir
+                        headers.frameOptions().disable()
                 )
                 .addFilterBefore(new TokenFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
